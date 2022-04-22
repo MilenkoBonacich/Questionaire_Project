@@ -1,0 +1,10 @@
+Worklog Marcel
+
+21/04
+
+Elementos Instalados (venv):
+	Flask
+	WTForms (pip install WTForms)
+
+Se genero la vista de para ingresar correos, lo que
+corresponde a la US8-T1.
