@@ -35,8 +35,17 @@ def my_form_post():
     cur.execute(sqlquery)
     preguntas = cur.fetchall()
     cur.close()
+    cur = conn.cursor()
+    sqlquery =  """
+                select *
+                from alternativa a, (select p.id_p from pregunta p where p.id_e = \'""" + text + """\') as b
+                where a.id_p = b.id_p;
+                """
+    cur.execute(sqlquery)
+    alternativas = cur.fetchall()
+    cur.close()
     conn.close()
-    return render_template('list.html', title=title, preguntas=preguntas)
+    return render_template('list.html', title=title, preguntas=preguntas, alternativas=alternativas)
 #@app.route("/")
 #def index():
 #    # Abrir un cursor para realizar operaciones sobre la base de datos

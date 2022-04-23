@@ -9,7 +9,15 @@
 <body>
 {% for pregunta in preguntas %}
     <ul>
-        <li>{{ pregunta[2] }}</li>
+        <li>{{ pregunta[2] }}
+        	<ul>
+        	{% for alternativa in alternativas %}
+        		{% if alternativa[1] == pregunta[0] %}
+        			<li>{{ alternativa[2] }}</li>
+        		{% endif %}
+        	{% endfor %}
+        	</ul>
+    	</li>
     </ul>
 {% endfor %}
 </body>
