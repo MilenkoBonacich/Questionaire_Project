@@ -11,9 +11,12 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
+
+
+
 @app.route("/")
 def hello():
-  msg = Message('Hello from the other side!', sender =   'alvaro.castillo.rifo@gmail.com', recipients = ['franico_c@hotmail.com','fcarrion2018@udec.cl','fcarrion2018@inf.ude.cl'])
-  msg.body = "HOLA FRANO ESTYO PROBANDOOOOO!"
+  msg = Message('flaskMail', sender =   'alvaro.castillo.rifo@gmail.com', recipients = ['franico_c@hotmail.com','fcarrion2018@udec.cl','fcarrion2018@inf.ude.cl'])
+  msg.body = "aqui segunda prueba"
   mail.send(msg)
   return "Message sent!"
