@@ -18,6 +18,7 @@ def get_dbconnection():
 @app.route('/')
 def my_form():
     return render_template('answers.html')
+    
 @app.route('/', methods={'POST'})
 def my_form_post():
     text = request.form['u']
@@ -27,7 +28,11 @@ def my_form_post():
     sqlquery = "select * from encuesta where encuesta.id_e = \'" + text + "\';"
     cur.execute(sqlquery)
     row = cur.fetchone()
-    title = row[1] #text.upper()
+
+    if row is None:
+        return {"Error":"No existe esta encuesta :("}
+
+    title = row[1]
     cur.close()
     #Seleccionar preguntas de la encuesta
     cur = conn.cursor()
@@ -46,22 +51,4 @@ def my_form_post():
     cur.close()
     conn.close()
     return render_template('list.html', title=title, preguntas=preguntas, alternativas=alternativas)
-#@app.route("/")
-#def index():
-#    # Abrir un cursor para realizar operaciones sobre la base de datos
-#   conn = get_dbconnection()
-#    cur = conn.cursor()
-    # Ejecutar una consulta SELECT
-#    sqlquery = "select * from encuesta;"
-#    cur.execute(sqlquery)
-    # Obtener los resultados como objetos Python
-#    row = cur.fetchone()
-    # Cerrar la conexión con la base de datos
-#    cur.close()
-#    conn.close()
-    # Recuperar datos del objeto Python
-#    datoprueba = row[1]
-    # Hacer algo con los datos
-#    print(datoprueba)
-#    return {"hello": "world"}
 
