@@ -37,7 +37,7 @@ def watchE():
         # comment_form = forms.CommentForm(request.form)
         # print(comment_form)
     else:
-        titulos={"Encuesta 1","Encuesta 2","Encuesta 3"}
+        titulos={"Encuesta1","Encuesta2","Encuesta3"}
         return render_template("watchE.html",titulos=titulos)
 
 @app.route("/agreeE")
@@ -52,14 +52,15 @@ def agreeE():
 # # def previewE():
 # #     return render_template("previewE.html")
 
-@app.route("/watchE/previewE")
-def preview():
-    titulo="Encuesta 82"
+@app.route("/previewE/<param>/")
+def preview(param):
+   
+    # titulo="Encuesta 82"
     npreguntas=["Le gusta el queso?","Come flan?","Va al baño seguido?","LLora por las noches?","Juega lolcito?"]
     alter1=["si","no"]
     # alter2={"si","no"}
     context = {
-        'titulo' : titulo,
+        'titulo' : '{}'.format(param),
         'npreguntas' : npreguntas,
         'alter1' : alter1,
     }

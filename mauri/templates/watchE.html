@@ -16,10 +16,10 @@
 
     <main>
         <div class="contenedor">
-            <form  >
+            <form >
             {% for ti in titulos %}
             
-            <label>{{ ti }} <input type="submit" name="{{ti}}" value="preview"></label>           
+            <label>{{ ti }} <input type="submit" value="preview" formaction="./previewE/{{ti}}"></label>           
             
             {% endfor %}
             </form>

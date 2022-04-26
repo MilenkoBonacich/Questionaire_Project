@@ -48,11 +48,17 @@ main .contenedor{
     width: 50%;
     border-radius: 25px;
     background-color: rgba(40, 55, 71, 0.967);
-    display: grid;
-    grid-template-columns: 10rem 10rem; 
-    grid-template-rows: 5rem;
+    display: flex;
+    /* grid-template-columns: 10rem 10rem; 
+    grid-template-rows: 5rem; */
     justify-content: center;
     color: aliceblue;
+}
+
+main .contenedor form{
+    display: flex;
+    flex-direction: column;
+    font-size: x-large;
 }
 
 main .contenedor button{
