@@ -21,12 +21,28 @@ def index():
 
 @app.route('/create/', methods=['GET','POST'])
 def create():
+    lp=[]
+    la=[]
+    size=0
     if request.method == 'POST':
-        if not request.form:
-            pass
-        elif request.form.get('menu')=='Volver a Menu':
+        if request.form.get('menu')=='Volver a Menu':
             return redirect(url_for('index'))
-    return render_template('create.html')
+        elif request.form.get('crear')=='Crear Encuesta':
+            f = request.form
+            for key in f.keys():
+                for value in f.getlist(key):
+                    print (key, ":", value)
+                    if(key.startswith('p')):
+                        size +=1
+                        lp.append(value)
+                        la.append([])
+                    elif(key.startswith('a')):
+                        la[size-1].append(value)
+            print(lp)
+            print(la)
+
+
+    return render_template('create.html', lista=lp, alist=la)
 
 if __name__=='__main__':
     app.run()
