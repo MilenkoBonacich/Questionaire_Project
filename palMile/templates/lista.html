@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<ul>
+
+	{% for i in range(0,(lista|length)) %}
+		<li>{{ lista[i] }}</li>
+		<ul>
+		{% for a in alternativas[i] %}
+			<li>{{ a }}</li>
+		{% endfor %}
+		</ul>
+		<form method="POST">
+		<input name="agregaAlternativa{{ i }}" placeholder="Aquí tu alternativa">
+		<input type="submit" value="Agregar alternativa">
+		</form>
+
+	{% endfor %}
+</ul>
+<form method="POST">
+	<input name="agregaPregunta" placeholder="Aquí tu pregunta">
+	<input type="submit" value="Agregar pregunta">
+</form>
+</body>
+</html>
