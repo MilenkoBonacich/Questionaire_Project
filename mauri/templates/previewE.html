@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+
+        <form action="/">
+            <button>Volver a la Pagina Principal</button>
+        </form>
+
+        <h1> {{titulo}}  </h1> 
+
+    </header>
+
+    <main>
+
+        {% for value in npreguntas %}
+            <h2>{{value}}</h2>
+
+            {% for value in alter1 %}
+                <button type="oneclick">{{value}}</button>
+            {% endfor %}
+
+        {% endfor %}
+
+    </main>
+
+</body>
+</html>
