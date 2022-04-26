@@ -1,0 +1,18 @@
+{% extends 'base/email.html' %}
+
+{% block content %}
+	
+	<h2> {{ title }} </h2>
+
+	<p> 
+		Tu email {{ email }} ha sido registrado. <br>
+		Ahora podras recibir nuestras encuestas en tu bandeja de entrada.
+	</p>
+
+	<br>
+
+	<form>
+		<button type="submit" formaction="{{ url_for('email_register') }}" >Go back</button>
+	</form>
+
+{% endblock %}

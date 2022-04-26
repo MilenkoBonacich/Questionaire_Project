@@ -1,0 +1,24 @@
+{% extends 'base/email.html' %}
+
+{% block content %}
+	
+	<h2> {{ title }} </h2>
+
+	{% from "_macro.html" import render_field %}
+
+	<form>
+		<div class="container">
+			<div class="row">
+				{{ render_field(eTF.email) }}
+				<button type="submit" formaction="{{ url_for('userEmail') }}" >Register</button>
+			</div>
+		</div>
+	</form>
+
+	<br>
+
+	<form>
+		<button type="submit" formaction="{{ url_for('email_list') }}" >Registered Emails</button>
+	</form>
+
+{% endblock %}

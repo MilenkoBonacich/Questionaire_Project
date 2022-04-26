@@ -1,0 +1,17 @@
+{% extends 'base/email.html' %}
+
+{% block content %}
+
+	<h2> {{ title }} </h2>
+	
+	{% for i in range (0, index) %}
+		<li> {{ emails[i] }} </li>
+	{% endfor %}
+
+	<br>
+
+	<form>
+		<button type="submit" formaction="{{ url_for('email_register') }}" >Go Back</button>
+	</form>
+
+{% endblock %}
