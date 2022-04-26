@@ -8,3 +8,26 @@ Elementos Instalados (venv):
 
 Se genero la vista de para ingresar correos, lo que
 corresponde a la US8-T1.
+
+
+24/04
+
+Elementos Instalados (venv):
+	Flask
+	WTForms (pip install WTForms)
+
+Se completaron las tareas relacionadas con la US7, en donde
+se creaba la interfaz para ver la lista de correos.
+Además se conecto esta interfaz con la BD con tal de ver los
+correos ya almacenados.
+
+
+25/04
+
+Elementos Instalados (venv):
+	Flask
+	WTForms (pip install WTForms)
+
+Se añadio la capacidad de insertar correos desde la pagina web
+hacia la base de datos.
+Con esto las relacionas con la US8, estan completadas y funcionales.
