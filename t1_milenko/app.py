@@ -21,8 +21,9 @@ def index():
 
 @app.route('/create/', methods=['GET','POST'])
 def create():
-    lp=[]
-    la=[]
+    datos=[] #0 = titulo, 1 = id, 2 = fecha inicio, 3 = fecha final
+    lp=[] # Preguntas
+    la=[] # Lista de alternativas por pregunta
     size=0
     if request.method == 'POST':
         if request.form.get('menu')=='Volver a Menu':
@@ -31,18 +32,20 @@ def create():
             f = request.form
             for key in f.keys():
                 for value in f.getlist(key):
-                    print (key, ":", value)
                     if(key.startswith('p')):
                         size +=1
                         lp.append(value)
                         la.append([])
                     elif(key.startswith('a')):
                         la[size-1].append(value)
+                    elif(key!='crear'):
+                        datos.append(value)
+            print(datos) 
             print(lp)
             print(la)
 
 
-    return render_template('create.html', lista=lp, alist=la)
+    return render_template('create.html')
 
 if __name__=='__main__':
     app.run()
