@@ -16,23 +16,15 @@ def get_dbconnection():
     return conn
 
 
-
 @app.route("/")
 def index():
-    # Abrir un cursor para realizar operaciones sobre la base de datos
     conn = get_dbconnection()
     cur = conn.cursor()
-    # Ejecutar una consulta SELECT
-    sqlquery = "select * from encuesta;"
+    sqlquery = "select * from email;"
     cur.execute(sqlquery)
-    # Obtener los resultados como objetos Python
-    row = cur.fetchone()
-    # Cerrar la conexión con la base de datos
+    for record in cur:
+    	print (record)
     cur.close()
     conn.close()
-    # Recuperar datos del objeto Python
-    datoprueba = row[1]
-    # Hacer algo con los datos
-    print(datoprueba)
-    return {"hello": "world"}
+    return "consulta realizada"
 

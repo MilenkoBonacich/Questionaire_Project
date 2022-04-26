@@ -7,16 +7,30 @@
 </head>
 {% endif %}
 <body>
+<h1> {{ title }} </h1>
 {% for pregunta in preguntas %}
     <ul>
         <li>{{ pregunta[2] }}
-        	<ul>
-        	{% for alternativa in alternativas %}
-        		{% if alternativa[1] == pregunta[0] %}
-        			<li>{{ alternativa[2] }}</li>
-        		{% endif %}
-        	{% endfor %}
-        	</ul>
+        	<table><tr>
+        		<td>
+		        	<ul>
+		        	{% for alternativa in alternativas %}
+		        		{% if alternativa[1] == pregunta[0] %}
+		        			<li>{{ alternativa[2] }}</li>
+		        		{% endif %}
+		        	{% endfor %}
+		        	</ul>
+		        </td>
+		        <td>
+		        	<ul style="list-style-type:none">
+		        	{% for alternativa in alternativas %}
+		        		{% if alternativa[1] == pregunta[0] %}
+		        			<li>{{ alternativa[3] }} respuestas</li>
+		        		{% endif %}
+		        	{% endfor %}
+		        	</ul>
+		        </td>
+        	</tr></table>
     	</li>
     </ul>
 {% endfor %}
