@@ -43,6 +43,22 @@ def create():
             print(datos) 
             print(lp)
             print(la)
+            conn = get_dbconnection()
+            cur = conn.cursor()
+            url = "localhost/encuesta"+datos[0] +"/responder"
+            cur.execute("INSERT INTO encuesta (id_e,titulo,url,f_ini,f_exp) VALUES (%s,%s,%s,%s,%s)",(datos[0],datos[1],url,datos[2],datos[3],))
+            conn.commit() 
+            for i in range(len(lp)):
+                id_p = datos[0]+'_p'+str(i)
+                cur.execute("INSERT INTO pregunta (id_p,id_e,texto) VALUES (%s,%s,%s)",(id_p,datos[0],lp[i],))
+                conn.commit()
+                for j in range(len(la[i])):
+                    id_a = id_p +'_a'+str(j)
+                    cur.execute("INSERT INTO alternativa (id_a,id_p,texto,cont_r) VALUES (%s,%s,%s,%s)",(id_a,id_p,la[i][j],0,))
+            conn.commit()
+            cur.close()
+            conn.close() 
+    
 
 
     return render_template('create.html')
