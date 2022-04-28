@@ -72,17 +72,17 @@ def create():
                         la[size-1].append(value)
                     elif(key!='crear'):
                         datos.append(value)
-            print(datos) 
-            print(lp)
-            print(la)
+            # print(datos) 
+            # print(lp)
+            # print(la)
             conn = get_dbconnection()
             cur = conn.cursor()
-            url = "localhost:5000/encuesta/"+datos[0] +"/responder"
-            cur.execute("INSERT INTO encuesta (id_e,titulo,url,f_ini,f_exp) VALUES (%s,%s,%s,%s,%s)",(datos[0],datos[1],url,datos[2],datos[3],))
+            url = "localhost:5000/encuesta/"+datos[1] +"/responder"
+            cur.execute("INSERT INTO encuesta (id_e,titulo,url,f_ini,f_exp) VALUES (%s,%s,%s,%s,%s)",(datos[1],datos[0],url,datos[2],datos[3],))
             conn.commit() 
             for i in range(len(lp)):
-                id_p = datos[0]+'_p'+str(i)
-                cur.execute("INSERT INTO pregunta (id_p,id_e,texto) VALUES (%s,%s,%s)",(id_p,datos[0],lp[i],))
+                id_p = datos[1]+'_p'+str(i)
+                cur.execute("INSERT INTO pregunta (id_p,id_e,texto) VALUES (%s,%s,%s)",(id_p,datos[1],lp[i],))
                 conn.commit()
                 for j in range(len(la[i])):
                     id_a = id_p +'_a'+str(j)
