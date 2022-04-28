@@ -17,11 +17,17 @@
     <main>
         <div class="contenedor">
             <form >
-            {% for ti in titulos %}
-            
-            <label>{{ ti }} <input type="submit" value="preview" formaction="./previewE/{{ti}}"></label>           
-            
+            {% for i in range(titulos|length) %}
+                
+            <label>{{ titulos[i][0] }}           
+            <input type="submit" value="preview" formaction="./watchE/{{id_es[i][0]}}">
+            <input type="submit" value="send" formaction="./watchE/{{id_es[i][0]}}">
+            <input type="submit" value="respuestas" formaction="./watchE/{{id_es[i][0]}}">
+            </label>
             {% endfor %}
+            
+            
+
             </form>
         </div>
         
