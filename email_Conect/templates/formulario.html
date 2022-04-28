@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+{% if title %}
+<head>
+	<meta charset="UTF-8">
+	<title>{{ title }}</title>
+</head>
+{% endif %}
+<body>
+<h1> {{ title }} </h1>
+
+<form method="POST">
+    {% for pregunta in preguntas %}
+        <ul>
+            <li>{{ pregunta[2] }}<br>
+            	{% for alternativa in alternativas %}
+            		{% if alternativa[1] == pregunta[0] %}
+            			<input type="radio" name="op_{{ pregunta[0] }}" value="{{ alternativa[0] }}">{{ alternativa[2] }}</input><br>
+            		{% endif %}
+            	{% endfor %}
+        	</li>
+        </ul>
+    {% endfor %}
+    <input type="submit" name="enviar_respuesta" value="Enviar">
+</form>
+</body>
+</html>
