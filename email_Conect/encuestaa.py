@@ -1,9 +1,3 @@
-# from crypt import methods
-# from sqlite3 import Row
-# from turtle import title
-# from crypt import methods
-# from multiprocessing import context
-# from xml.etree.ElementTree import Comment
 from flask import Flask, request, render_template, redirect, url_for
 from flask_mail import Mail, Message 
 import psycopg2
@@ -55,7 +49,7 @@ def createE():
     if request.method == 'POST':
         if request.form.get('crear encuesta')=='Crear Encuesta':
             return redirect(url_for('create'))
-    return render_template('create.html')
+    return render_template('createE.html')
 
 @app.route('/create/', methods=['GET','POST'])
 def create():
@@ -65,7 +59,7 @@ def create():
     size=0
     if request.method == 'POST':
         if request.form.get('menu')=='Volver a Menu':
-            return redirect(url_for('/'))
+            return redirect(url_for('hello_world'))
         elif request.form.get('crear')=='Crear Encuesta':
             f = request.form
             for key in f.keys():
@@ -99,10 +93,10 @@ def create():
     
 
 
-    return render_template('index.html')
+    return render_template('create.html')
 
 @app.route("/agreeE")
-def agreeE():
+def email_register():
     emailTF = forms.emailForm()
     emailTF.validate()
     return render_template('email_Register.html', title='Registration', eTF=emailTF)
