@@ -1,0 +1,86 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 62.5%;
+    font-family: Montserrat;
+}
+
+main{
+    background-image: url(../imgs/backgroundoffical.png);
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100vw;
+    display: grid;
+    grid-template-columns: 50vw 50vw;
+    grid-template-rows: 100vh ;
+}
+
+main .image-back{
+    display: flex;
+    place-items: center;
+}
+
+main section img{
+    
+    width: 50vw;
+    height: auto;
+    
+}
+
+.section2 {
+    display: grid;
+    place-items: center;
+}
+
+section form{
+    margin-bottom: 25%;
+}
+
+.section2 form h1{
+    color: #3b4a5b;
+    text-align: center;
+    font-size: 3.6rem;
+    font-weight: 900;
+    margin: 2.5rem;
+}
+
+.section2 form label{
+    display: flex;
+    flex-direction: column;
+}
+
+.section2 form label span{
+    color: #3b4a5b;
+    margin: 1.6rem 0 1.6rem 2.6rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.section2 form label input{
+    border-radius: 25px;
+    border: 1px solid #e2e9ed;
+    height: 6rem;
+    width: 45rem;
+    margin: 0 0 0.6rem 0;
+}
+
+.section2 form button{
+    background-color: #3b4859;
+    border: none;
+    color:white ;
+    font-size: 2rem;
+    border-radius: 25px;
+    height: 6rem;
+    width: 100%;
+    margin: 4rem 0 0 0;
+}
+
+.fondo-section2 {
+    background-color: rgba(158, 216, 216, 0.5);
+    border-radius: 75px;
+    padding: 8rem;
+}
