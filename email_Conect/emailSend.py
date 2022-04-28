@@ -28,9 +28,12 @@ def get_dbconnection():
 def hello():
   conn = get_dbconnection()
   cur = conn.cursor()
-  sqlquery = "select * from email;"
+  sqlquery = "select id from email;"
   cur.execute(sqlquery)
-  receptores = cur.fetchall()
+  rows = cur.fetchall()
+  receptores = []
+  for r in rows:
+    receptores.append(r[0])
   print(receptores)
 
   cur.close()
