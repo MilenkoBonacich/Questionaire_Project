@@ -7,7 +7,10 @@
 </head>
 {% endif %}
 <body>
-<h1> {{ title }} </h1>
+<header>
+	<h1><a href="{{ url_for('hello_world')}}">Bienvenido Admin!</a></h1>
+</header>
+<h1> {{ titulo }} </h1>
 {% for pregunta in preguntas %}
     <ul>
         <li>{{ pregunta[2] }}

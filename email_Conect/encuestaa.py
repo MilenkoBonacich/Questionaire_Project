@@ -49,7 +49,7 @@ def createE():
     if request.method == 'POST':
         if request.form.get('crear encuesta')=='Crear Encuesta':
             return redirect(url_for('create'))
-    return render_template('createE.html')
+    return render_template('createE.html')  
 
 @app.route('/create/', methods=['GET','POST'])
 def create():
