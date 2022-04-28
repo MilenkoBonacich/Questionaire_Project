@@ -1,0 +1,140 @@
+<html>
+    <head>
+        <title>Creador de Encuesta</title>
+    </head>
+    <script>
+        var size=0, count=0
+        function getIniDate() {
+            const flag=document.getElementById("end");
+            if (flag===null){
+                var endate = document.createElement("p")
+                var node = document.createTextNode("Fecha Final: ")
+                endate.appendChild(node);
+
+                var element = document.createElement("input")
+                element.type = "date"
+                element.id = "end"
+                element.name = "end"
+                endate.appendChild(element);
+                document.getElementById("ifecha").appendChild(endate)
+            }
+            var fecha=document.getElementById("ini").value
+            document.getElementById("end").min=fecha
+        }
+        function makeQuestion(){
+            if(size===20) alert("Cantidad de preguntas maxima alcanzada")
+            else{
+                ++size
+                ++count
+                const question = document.createElement("li")
+                const textbox = document.createElement("input")
+                textbox.type = "text"
+                textbox.size = "150"
+                textbox.maxlength = "150"
+                textbox.class = "pregunta"
+                textbox.name = "p"+count
+
+                const erase = document.createElement("button")
+                erase.type = "button"
+                erase.appendChild(document.createTextNode("Borrar pregunta"))
+                erase.onclick= function(){
+                    question.remove()
+                    --size
+                }
+
+                const list = document.createElement("ol")
+                makeAlternative(list)
+                makeAlternative(list)
+
+                const calt = document.createElement("button")
+                calt.type = "button"
+                calt.appendChild(document.createTextNode("Crear Alternativa"))
+                calt.onclick= function(){
+                    if(list.childElementCount<10){
+                        const alt = document.createElement("li")
+                        const textalt = document.createElement("input")
+                        textalt.type = "text"
+                        textalt.size = "50"
+                        textalt.maxlength = "50"
+                        textalt.class = "alternativa"
+                        textalt.name = "a"+count
+                        alt.appendChild(textalt)
+                        list.appendChild(alt)
+                    }
+                }
+
+                const balt = document.createElement("button")
+                balt.type = "button"
+                balt.appendChild(document.createTextNode("Borrar Alternativa"))
+                balt.onclick= function(){
+                    if(list.childElementCount>2){
+                        list.lastChild.remove()
+                    }
+                }
+
+                question.appendChild(textbox)
+                question.appendChild(erase)
+                question.appendChild(calt)
+                question.appendChild(balt)
+                question.appendChild(list)
+                document.getElementById("preguntas").appendChild(question)
+            }
+        }
+        function makeAlternative(list){
+            const alt = document.createElement("li")
+            const textalt = document.createElement("input")
+            textalt.type = "text"
+            textalt.size = "50"
+            textalt.maxlength = "50"
+            textalt.class = "alternativa"
+            textalt.name = "a"+count
+            alt.appendChild(textalt)
+            list.appendChild(alt)
+        }
+        function checkSubmition(){
+            if(size===0){
+                alert("Encuesta necesita una pregunta")
+                return false
+            }
+            const dateInput = document.querySelectorAll('input[type=date]');
+            for (let i = 0; i < dateInput.length; i++) {
+                var element = dateInput[i];
+                if(!element.value){
+                    if(i===0)alert("No hay fecha de inicio")
+                    else alert("No hay fecha final")
+                    return false
+                }
+            }
+            const sub = document.querySelectorAll('input[type=text]');
+            for (let i = 0; i < sub.length; i++) {
+                var element = sub[i];
+                if(!element.value){
+                    alert("Uno o mas inputs estan vacios")
+                    return false
+                }
+            }
+            return true
+        }
+    </script>
+    <body>
+        <form method="post"><input type="submit" name="menu" value="Volver a Menu"/></form>
+        <h2>Crear Encuesta:</h2>
+        <form method="post" onSubmit="return checkSubmition()"> <!--Por alguna razon VS Code me dice que el return no va ahi, pero el codigo funciona como debe-->
+            <p>Titulo de encuesta:
+                <input type="text" name="title" size="30" maxlength="100">
+            </p>
+            <p>ID encuesta:
+                <input type="text" name="id" size="30" maxlength="100">
+            </p>
+            <p id="ifecha">Fecha Inicio:
+                <input onchange="getIniDate()" type="date" id="ini" name="ini">
+            </p>
+            <input onclick="makeQuestion()" type="button" name="cpreguntas" value="Crear Pregunta"/>
+            <h3>Preguntas:</h3>
+                <ol id="preguntas">
+
+                </ol>
+            <input type="submit" name="crear" value="Crear Encuesta"/>
+        </form>
+    </body>
+</html>
