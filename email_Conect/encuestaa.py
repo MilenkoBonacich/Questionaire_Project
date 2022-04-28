@@ -41,7 +41,7 @@ def emailSend(url):
     cur.close()
     conn.close()
     msg = Message('Prueba-Encuesta', sender =   'alvaro.castillo.rifo@gmail.com', recipients = receptores)
-    msg.body = "Hola puedes responder tu encuesta aqui: "+url
+    msg.body = "Hola puedes responder tu encuesta aqui: localhost:5000/encuesta/" + url + "/responder"
     mail.send(msg)
 
 
