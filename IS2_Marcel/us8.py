@@ -20,6 +20,8 @@ def get_dbconnection():
 def email_register():
 
 	emailTF = forms.emailForm()
+	emailTF.validate()
+
 	return render_template('email_Register.html', title='Registration', eTF=emailTF)
 
 
@@ -29,15 +31,19 @@ def email_list():
 	conn = get_dbconnection()
 	cur = conn.cursor()
     
-	sqlquery = "select * from email;"
+	sqlquery = "SELECT * FROM email ORDER BY id;"
 	cur.execute(sqlquery)
-	query = cur.fetchall()
-	length = len(query)
+	rows = cur.fetchall()
     
 	cur.close()
 	conn.close()
 
-	return render_template('email_List.html', title='Email DataBase', emails=query, index=length )
+	emails = []
+	for r in rows:
+		emails.append( r[0] )
+
+	length = len(emails)
+	return render_template('email_List.html', title='Email DataBase', emails=emails, index=length )
 
 
 @app.route('/email')

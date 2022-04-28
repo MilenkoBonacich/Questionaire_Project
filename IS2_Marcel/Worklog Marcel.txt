@@ -15,6 +15,7 @@ corresponde a la US8-T1.
 Elementos Instalados (venv):
 	Flask
 	WTForms (pip install WTForms)
+	psycopg2
 
 Se completaron las tareas relacionadas con la US7, en donde
 se creaba la interfaz para ver la lista de correos.
@@ -27,7 +28,21 @@ correos ya almacenados.
 Elementos Instalados (venv):
 	Flask
 	WTForms (pip install WTForms)
+	psycopg2
 
 Se añadio la capacidad de insertar correos desde la pagina web
 hacia la base de datos.
-Con esto las relacionas con la US8, estan completadas y funcionales.
+Con esto las tareas relacionadas con la US8, estan completadas y funcionales.
+
+
+27/04
+
+Elementos Instalados (venv):
+	Flask
+	WTForms (pip install WTForms)
+	psycopg2
+
+Se añadieron detalles:
+	Validador del campo de texto: Ahora no acepta entradas vacias.
+	Lista de Correos almacenados en BD ahora son puestos en orden alfabetico.
+	Se renombro el archivo "us8.py" a "emails.py"
