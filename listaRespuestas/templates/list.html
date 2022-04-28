@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<!-- Título de la encuesta pasado por argumentos -->
+	<title>{{ title }}</title>
+</head>
+<body>
+<!-- Se agrega el título como h1 por estética -->
+<h1> {{ title }} </h1>
+<!-- Se itera en las preguntas -->
+{% for pregunta in preguntas %}
+    <ul>
+        <li>{{ pregunta[2] }}<!-- Tercer atributo en la tabla pregunta: título de la pregunta -->
+        	<table><tr>	<!-- Se agrega una tabla para dividir alternativas de cantidad de respuestas -->
+        		<td>
+		        	<ul><!-- Se itera en la lista de alternativas correspondiente a la encuesta -->
+		        	{% for alternativa in alternativas %}
+		        		{% if alternativa[1] == pregunta[0] %}<!-- Se revisa que tenga la foreign key correspondiente a la pregunta -->
+		        			<li>{{ alternativa[2] }}</li>	<!-- Se imprime el texto de la alternativa en la lista anidada -->
+		        		{% endif %}
+		        	{% endfor %}
+		        	</ul>
+		        </td>
+		        <td>
+		        	<ul style="list-style-type:none">	<!-- css para eliminar el "bullet" al lado de los items, estética -->
+		        	{% for alternativa in alternativas %}	<!-- Se itera alternativas para obtener la cantidad de respuestas -->
+		        		{% if alternativa[1] == pregunta[0] %}	<!-- Se hace la misma comparación para verificar -->
+		        			<li>{{ alternativa[3] }} respuestas</li>	<!-- Cantidad de respuestas -->
+		        		{% endif %}
+		        	{% endfor %}
+		        	</ul>
+		        </td>
+        	</tr></table>
+    	</li>
+    </ul>
+{% endfor %}
+</body>
+</html>

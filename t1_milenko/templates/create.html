@@ -14,6 +14,7 @@
                 var element = document.createElement("input")
                 element.type = "date"
                 element.id = "end"
+                element.name = "end"
                 endate.appendChild(element);
                 document.getElementById("ifecha").appendChild(endate)
             }
@@ -31,7 +32,7 @@
                 textbox.size = "150"
                 textbox.maxlength = "150"
                 textbox.class = "pregunta"
-                textbox.id = "p"+count
+                textbox.name = "p"+count
 
                 const erase = document.createElement("button")
                 erase.type = "button"
@@ -42,7 +43,6 @@
                 }
 
                 const list = document.createElement("ol")
-                list.id= "a"+count;
                 makeAlternative(list)
                 makeAlternative(list)
 
@@ -57,6 +57,7 @@
                         textalt.size = "50"
                         textalt.maxlength = "50"
                         textalt.class = "alternativa"
+                        textalt.name = "a"+count
                         alt.appendChild(textalt)
                         list.appendChild(alt)
                     }
@@ -86,6 +87,7 @@
             textalt.size = "50"
             textalt.maxlength = "50"
             textalt.class = "alternativa"
+            textalt.name = "a"+count
             alt.appendChild(textalt)
             list.appendChild(alt)
         }
@@ -125,7 +127,7 @@
                 <input type="text" name="id" size="30" maxlength="100">
             </p>
             <p id="ifecha">Fecha Inicio:
-                <input onchange="getIniDate()" type="date" id="ini">
+                <input onchange="getIniDate()" type="date" id="ini" name="ini">
             </p>
             <input onclick="makeQuestion()" type="button" name="cpreguntas" value="Crear Pregunta"/>
             <h3>Preguntas:</h3>
