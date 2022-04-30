@@ -12,7 +12,6 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
-
 def get_dbconnection():
     PSQL_HOST = "ec2-52-201-124-168.compute-1.amazonaws.com"
     PSQL_PORT = "5432"
@@ -23,21 +22,26 @@ def get_dbconnection():
     conn = psycopg2.connect(connstr)
     return conn
 
-def emailSend(url):
-    conn = get_dbconnection()
-    cur = conn.cursor()
-    sqlquery = "select id from email;"
-    cur.execute(sqlquery)
-    rows = cur.fetchall()
-    receptores = []
-    for r in rows:
-        receptores.append(r[0])
-    cur.close()
-    conn.close()
-    msg = Message('Prueba-Encuesta', sender =   'alvaro.castillo.rifo@gmail.com', recipients = receptores)
-    msg.body = "Hola puedes responder tu encuesta aqui: localhost:5000/encuesta/" + url + "/responder"
-    mail.send(msg)
+def emailSend(id_e): #Función para mandar mails
+    #id_e := id de encuesta cuyo url se enviará.
 
+    conn = get_dbconnection()               #Conexión a la base de datos.
+    cur = conn.cursor()
+    cur.execute("select id from email;")    #Query a base de datos de mails
+    rows = cur.fetchall()                   #Obtención de tuplas (con una única columna)
+    receptores = []                         #receptores := Lista de receptores para el email.
+    for r in rows:                          #Transformamos lista de tuplas a lista.
+        receptores.append(r[0])
+    cur.close()                             #Desconexión a la base de datos.
+    conn.close()
+    msg = Message(  
+                'Prueba-Encuesta',                          #Asunto del email.
+                sender =   'alvaro.castillo.rifo@gmail.com',#Emisor del email.
+                recipients = receptores                     #Receptor del email.
+                )
+    #Cuerpo del email
+    msg.body = "Hola puedes responder tu encuesta aqui: localhost:5000/encuesta/" + id_e + "/responder"
+    mail.send(msg)  #Envio del email.
 
 @app.route("/")
 def hello_world():
