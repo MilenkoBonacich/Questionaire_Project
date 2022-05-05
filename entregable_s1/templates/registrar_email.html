@@ -2,7 +2,7 @@
 
 {% block content %}
 	<header>
-		<h1><a href="{{ url_for('hello_world')}}">Bienvenido Admin!</a></h1>
+		<h1><a href="/">Bienvenido Admin!</a></h1>
 	</header>
 	<h2> {{ title }} </h2>
 
@@ -12,7 +12,7 @@
 		<div class="container">
 			<div class="row">
 				{{ render_field(eTF.email) }}
-				<button type="submit" formaction="{{ url_for('userEmail') }}" >Register</button>
+				<button type="submit" formaction="{{ url_for('email_registrado') }}" >Register</button>
 			</div>
 		</div>
 	</form>
@@ -20,7 +20,7 @@
 	<br>
 
 	<form>
-		<button type="submit" formaction="{{ url_for('email_list') }}" >Registered Emails</button>
+		<button type="submit" formaction="{{ url_for('lista_email') }}" >Registered Emails</button>
 	</form>
 
 {% endblock %}

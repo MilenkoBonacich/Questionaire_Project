@@ -20,8 +20,8 @@
             {% for i in range(titulos|length) %}
                 
             <label>{{ titulos[i][0] }}           
-            <input type="submit" value="preview" formaction="./watchE/{{id_es[i][0]}}">
-            <input type="submit" value="send" formaction=" {{ url_for('sendUrl',id_e=id_es[i][0]) }} ">
+            <input type="submit" value="preview" formaction="./previsualizar/{{id_es[i][0]}}">
+            <input type="submit" value="send" formaction=" {{ url_for('enviar_encuesta',id_e=id_es[i][0]) }} ">
             <input type="submit" value="respuestas" formaction="{{ url_for('respuestas',id_e=id_es[i][0]) }}">
             </label>
             {% endfor %}
