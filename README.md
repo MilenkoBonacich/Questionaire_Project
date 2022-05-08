@@ -21,3 +21,37 @@ La interacción de los encuestados con la página comenzará desde el correo ele
 	- `t1_milenko/`: Prototipo de creación de encuestas
 	- `palMile/`: Prototipo de ejemplo para creación de
 - `entregable_s1/`: Producto entregable del sprint 1
+### Rutas:
+#### `/`: Página principal
+con botones de acceso para crear y listar encuestas, y para registrar emails.
+- html: `principal.html`
+- función: `pprincipal()`
+#### `/crear-encuesta`: Página para crear encuestas
+Con campos para rellenar y agregar preguntas y alternativas
+- html: `crear_encuesta.html`
+- función: `crearE()`
+#### `/email/registrar`: Página para registrar emails
+Con un campo para agregar un email y botón de acceso a la lista de emails
+- html: `registrar_email.html`
+- función: `registrar_email()`
+#### `/email/lista`: Página para listar emails
+- html: `lista_email.html`
+- función: `lista_email()`
+#### `/email/registro-exitoso`: Página de confirmación para el registro de un email
+- html: `email_registrado.html`
+- función: `email_registrado()`
+#### `/lista-encuestas`: Página de Lista de encuestas
+- html: `lista_encuesta.html`
+- función: `listaE()`
+#### `/previsualizar/<string:id_e>`: Página de previsualización de una encuesta
+- html: `previsualizar_encuesta()`
+- función: `previsualizar()`
+#### `/encuesta/<string:id_e>/respuestas`: Página para ver cantidad de respuestas de una encuesta
+- html: `respuestas.html`
+- función: `respuestas()`
+#### `encuesta/<string:id_e>/responder`: Página para responder una encuesta
+- html: `responder.html`
+- función: `responder()`
+#### `/lista-encuestas/enviar/<string:id_e>`: Página para el envío de una encuesta
+El usuario no llega a interactuar con esta página ya que retorna instantáneamente a la lista de encuestas
+- función: `enviar_encuesta()`

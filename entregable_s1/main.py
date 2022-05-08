@@ -22,9 +22,131 @@ def get_dbconnection():
     conn = psycopg2.connect(connstr)
     return conn
 
-def emailSend(id_e): #Función para mandar mails
-    #id_e := id de encuesta cuyo url se enviará.
+#------------------------------- Función para mandar mails ----------------------------------------------
+# def enviar_encuesta(id_e): 
+#     #id_e := id de encuesta cuyo url se enviará.
 
+#     conn = get_dbconnection()               #Conexión a la base de datos.
+#     cur = conn.cursor()
+#     cur.execute("select id from email;")    #Query a base de datos de mails
+#     rows = cur.fetchall()                   #Obtención de tuplas (con una única columna)
+#     receptores = []                         #receptores := Lista de receptores para el email.
+#     for r in rows:                          #Transformamos lista de tuplas a lista.
+#         receptores.append(r[0])
+#     cur.close()                             #Desconexión a la base de datos.
+#     conn.close()
+#     msg = Message(  
+#                 'Prueba-Encuesta',                          #Asunto del email.
+#                 sender =   'alvaro.castillo.rifo@gmail.com',#Emisor del email.
+#                 recipients = receptores                     #Receptor del email.
+#                 )
+#     #Cuerpo del email
+#     msg.body = "Hola puedes responder tu encuesta aqui: localhost:5000/encuesta/" + id_e + "/responder"
+#     mail.send(msg)  #Envio del email.
+
+#----------------------------------- Manejo Página principal ---------------------------------------
+@app.route("/")
+def pprincipal():
+    return render_template("principal.html")
+
+#----------- Manejo Página para el botón para ir a crear una encuesta? -------------
+#@app.route("/createE", methods=['GET','POST'])
+#def createE():
+ #   if request.method == 'POST':
+ #       if request.form.get('crear encuesta')=='Crear Encuesta':
+ #           return redirect(url_for('create'))
+ #   return render_template('createE.html')  
+
+#----------------------------------- Manejo Página para crear encuesta ------------------------------
+@app.route('/crear-encuesta/', methods=['GET','POST'])
+def crearE():
+    datos=[] #0 = titulo, 1 = id, 2 = fecha inicio, 3 = fecha final
+    lp=[] # Preguntas
+    la=[] # Lista de alternativas por pregunta
+    size=0
+    if request.method == 'POST':
+        if request.form.get('menu')=='Volver a Menu':
+            return redirect(url_for('manejador_pp'))
+        elif request.form.get('crear')=='Crear Encuesta':
+            f = request.form
+            for key in f.keys():
+                for value in f.getlist(key):
+                    if(key.startswith('p')):
+                        size +=1
+                        lp.append(value)
+                        la.append([])
+                    elif(key.startswith('a')):
+                        la[size-1].append(value)
+                    elif(key!='crear'):
+                        datos.append(value)
+            conn = get_dbconnection()
+            cur = conn.cursor()
+            url = "localhost:5000/encuesta/"+datos[1] +"/responder"
+            cur.execute("INSERT INTO encuesta (id_e,titulo,url,f_ini,f_exp) VALUES (%s,%s,%s,%s,%s)",(datos[1],datos[0],url,datos[2],datos[3],))
+            conn.commit() 
+            for i in range(len(lp)):
+                id_p = datos[1]+'_p'+str(i)
+                cur.execute("INSERT INTO pregunta (id_p,id_e,texto) VALUES (%s,%s,%s)",(id_p,datos[1],lp[i],))
+                conn.commit()
+                for j in range(len(la[i])):
+                    id_a = id_p +'_a'+str(j)
+                    cur.execute("INSERT INTO alternativa (id_a,id_p,texto,cont_r) VALUES (%s,%s,%s,%s)",(id_a,id_p,la[i][j],0,))
+            conn.commit()
+            cur.close()
+            conn.close() 
+    
+    return render_template('crear_encuesta.html')
+
+#-------------------------- Manejo de Página para agregar emails ------------------------------
+@app.route("/email/registrar")
+def registrar_email():
+    emailTF = forms.emailForm()
+    emailTF.validate()
+    return render_template('registrar_email.html', title='Registration', eTF=emailTF)
+
+#--------------------- Manejo de Página para ver lista de emails ---------------------------------
+@app.route("/email/lista")
+def lista_email():
+    
+    conn = get_dbconnection()
+    cur = conn.cursor()
+    
+    sqlquery = "SELECT * FROM email ORDER BY id;"
+    cur.execute(sqlquery)
+    rows = cur.fetchall()
+    
+    cur.close()
+    conn.close()
+
+    emails = []
+    for r in rows:
+        emails.append( r[0] )
+
+    length = len(emails)
+    return render_template('lista_email.html', title='Email DataBase', emails=emails, index=length )
+
+#--------------------- Manejo de Página para finalizar registro de emails -------------------------
+@app.route('/email/registro-exitoso')
+def email_registrado():
+
+    email = request.args.get('email', 'no email')
+
+    conn = get_dbconnection()
+    cur = conn.cursor()
+    
+    sqlquery = """ INSERT INTO email (id) VALUES ('%s') """ %(email)
+    cur.execute( sqlquery )
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+    return render_template('email_registrado.html', title='Registration Successful', email=email)
+
+#----------------------------- Manejo de envío de encuestas -------------------------------
+@app.route("/lista-encuestas/enviar/<string:id_e>")
+def enviar_encuesta(id_e):
+    #id_e := id de encuesta cuyo url se enviará.
     conn = get_dbconnection()               #Conexión a la base de datos.
     cur = conn.cursor()
     cur.execute("select id from email;")    #Query a base de datos de mails
@@ -43,114 +165,11 @@ def emailSend(id_e): #Función para mandar mails
     msg.body = "Hola puedes responder tu encuesta aqui: localhost:5000/encuesta/" + id_e + "/responder"
     mail.send(msg)  #Envio del email.
 
-@app.route("/")
-def hello_world():
-    return render_template("index.html")
+    return redirect(url_for('listaE'))
 
-
-@app.route("/createE", methods=['GET','POST'])
-def createE():
-    if request.method == 'POST':
-        if request.form.get('crear encuesta')=='Crear Encuesta':
-            return redirect(url_for('create'))
-    return render_template('createE.html')  
-
-@app.route('/create/', methods=['GET','POST'])
-def create():
-    datos=[] #0 = titulo, 1 = id, 2 = fecha inicio, 3 = fecha final
-    lp=[] # Preguntas
-    la=[] # Lista de alternativas por pregunta
-    size=0
-    if request.method == 'POST':
-        if request.form.get('menu')=='Volver a Menu':
-            return redirect(url_for('hello_world'))
-        elif request.form.get('crear')=='Crear Encuesta':
-            f = request.form
-            for key in f.keys():
-                for value in f.getlist(key):
-                    if(key.startswith('p')):
-                        size +=1
-                        lp.append(value)
-                        la.append([])
-                    elif(key.startswith('a')):
-                        la[size-1].append(value)
-                    elif(key!='crear'):
-                        datos.append(value)
-            # print(datos) 
-            # print(lp)
-            # print(la)
-            conn = get_dbconnection()
-            cur = conn.cursor()
-            url = "localhost:5000/encuesta/"+datos[1] +"/responder"
-            cur.execute("INSERT INTO encuesta (id_e,titulo,url,f_ini,f_exp) VALUES (%s,%s,%s,%s,%s)",(datos[1],datos[0],url,datos[2],datos[3],))
-            conn.commit() 
-            for i in range(len(lp)):
-                id_p = datos[1]+'_p'+str(i)
-                cur.execute("INSERT INTO pregunta (id_p,id_e,texto) VALUES (%s,%s,%s)",(id_p,datos[1],lp[i],))
-                conn.commit()
-                for j in range(len(la[i])):
-                    id_a = id_p +'_a'+str(j)
-                    cur.execute("INSERT INTO alternativa (id_a,id_p,texto,cont_r) VALUES (%s,%s,%s,%s)",(id_a,id_p,la[i][j],0,))
-            conn.commit()
-            cur.close()
-            conn.close() 
-    
-
-
-    return render_template('create.html')
-
-@app.route("/agreeE")
-def email_register():
-    emailTF = forms.emailForm()
-    emailTF.validate()
-    return render_template('email_Register.html', title='Registration', eTF=emailTF)
-
-@app.route("/list")
-def email_list():
-    
-    conn = get_dbconnection()
-    cur = conn.cursor()
-    
-    sqlquery = "SELECT * FROM email ORDER BY id;"
-    cur.execute(sqlquery)
-    rows = cur.fetchall()
-    
-    cur.close()
-    conn.close()
-
-    emails = []
-    for r in rows:
-        emails.append( r[0] )
-
-    length = len(emails)
-    return render_template('email_List.html', title='Email DataBase', emails=emails, index=length )
-
-
-@app.route('/email')
-def userEmail():
-
-    email = request.args.get('email', 'no email')
-
-    conn = get_dbconnection()
-    cur = conn.cursor()
-    
-    sqlquery = """ INSERT INTO email (id) VALUES ('%s') """ %(email)
-    cur.execute( sqlquery )
-    conn.commit()
-
-    cur.close()
-    conn.close()
-
-    return render_template('email_Confirm.html', title='Registration Successful', email=email)
-
-@app.route("/watchE/send/<string:id_e>")
-def sendUrl(id_e):
-    emailSend(id_e)
-    return redirect(url_for('watchE'))
-
-
-@app.route("/watchE")
-def watchE():
+#-------------------------- Manejo de Página de lista de encuestas ----------------------------
+@app.route("/lista-encuestas")
+def listaE():
     conn = get_dbconnection() 
     cur = conn.cursor()
     sqlquery = "select titulo from encuesta;"
@@ -165,20 +184,11 @@ def watchE():
     id_es=row
     cur.close()  
     conn.close()
-    return render_template("watchE.html",titulos=titulos,id_es=id_es)
+    return render_template("lista_encuesta.html",titulos=titulos,id_es=id_es)
 
-
-    # if request.method == 'POST':
-    #     seleccion= request.form.get('prev')
-    #     return render_template("watchE.html",titulos=seleccion)
-    #     # comment_form = forms.CommentForm(request.form)
-    #     # print(comment_form)
-    # else:
-    #     titulos={"encuesta_1","Encuesta2","Encuesta3"}
-    #     return render_template("watchE.html",titulos=titulos)
-
-@app.route('/watchE/<string:id_e>')    #Url con la lista, tiene la id de encuesta en la url
-def previewE(id_e):
+#------------------- Manejo de Página de Previsualización de Encuesta ----------------------
+@app.route('/previsualizar/<string:id_e>')    #Url con la lista, tiene la id de encuesta en la url
+def previsualizar(id_e):
     conn = get_dbconnection()                       #Conexión a la base de datos
     #Seleccionar titulo de la encuesta
     cur = conn.cursor()
@@ -207,7 +217,7 @@ def previewE(id_e):
     alternativas = cur.fetchall()   #Arreglo de alternativas
     cur.close()
     conn.close()
-    return render_template('previewE.html', titulo=title, preguntas=preguntas, alternativas=alternativas)
+    return render_template('previsualizar_encuesta.html', titulo=title, preguntas=preguntas, alternativas=alternativas)
 
 #Código Franco: Lista de Respuestas--------------------------------------------------------------------------
 @app.route('/encuesta/<string:id_e>/respuestas')    #Url con la lista, tiene la id de encuesta en la url
@@ -240,7 +250,7 @@ def respuestas(id_e):
     alternativas = cur.fetchall()   #Arreglo de alternativas
     cur.close()
     conn.close()
-    return render_template('list.html', title=title, preguntas=preguntas, alternativas=alternativas)
+    return render_template('respuestas.html', title=title, preguntas=preguntas, alternativas=alternativas)
 #-----------------------------------------------------------------------------------------------------------------
 #Código franco: Formulario para enviar respuesta------------------------------------------------------------------
 @app.route('/encuesta/<string:id_e>/responder')    #Url con la lista, tiene la id de encuesta en la url
@@ -273,7 +283,7 @@ def responder(id_e):
     alternativas = cur.fetchall()   #Arreglo de alternativas
     cur.close()
     conn.close()
-    return render_template('formulario.html', title=title, preguntas=preguntas, alternativas=alternativas)
+    return render_template('responder.html', title=title, preguntas=preguntas, alternativas=alternativas)
 
 @app.route('/encuesta/<string:id_e>/responder', methods={'POST'})
 def enviar(id_e):
@@ -295,29 +305,6 @@ def enviar(id_e):
     conn.close()
     return "<h1>Greacias! :D</h1><h2>Agradecemos su participación</h2>"
 #-----------------------------------------------------------------------------------------------------------------
-
-# @app.route("/previewE/<param>/")
-# def preview(param):
-   
-#     # titulo="Encuesta 82"
-#     # npreguntas=["Le gusta el queso?","Come flan?","Va al baño seguido?","LLora por las noches?","Juega lolcito?"]
-#     # alter1=["si","no"]
-#     # alter2={"si","no"}
-#     context = {
-#         'titulo' : '{}'.format(param),
-#         # 'npreguntas' : npreguntas,
-#         # 'alter1' : alter1,
-#     }
-#     return render_template('previewE.html',**context)
-
-
-# @app.route("/login")
-# def create():
-#     return render_template("login.html")
-
-# # @app.route("/watchE/previewE")
-# # def previewE():
-# #     return render_template("previewE.html")
 
 if __name__=="__main__":
         app.run(debug=True)
