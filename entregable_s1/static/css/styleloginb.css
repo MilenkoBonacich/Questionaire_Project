@@ -1,0 +1,21 @@
+.selector-for-some-widget {
+    box-sizing: content-box;
+ }
+
+
+header nav img{
+    height: 12vh;
+   
+}
+
+body{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+main{
+    height: 70vh;
+}
+footer{
+    height: 17vh;
+}
