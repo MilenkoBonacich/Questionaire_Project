@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Flask, request, render_template, redirect, url_for
 from flask_mail import Mail, Message 
 import psycopg2
@@ -105,7 +106,7 @@ def registrar_email():
     return render_template('registrar_email.html', title='Registration', eTF=emailTF)
 
 #--------------------- Manejo de Página para ver lista de emails ---------------------------------
-@app.route("/email/lista")
+@app.route("/email/lista", methods=['GET','POST'])
 def lista_email():
     
     conn = get_dbconnection()
@@ -168,8 +169,10 @@ def enviar_encuesta(id_e):
     return redirect(url_for('listaE'))
 
 #-------------------------- Manejo de Página de lista de encuestas ----------------------------
-@app.route("/lista-encuestas")
+@app.route("/lista-encuestas", methods=['GET','POST'])
 def listaE():
+    if request.method == 'POST':
+        insertDescripcion()
     conn = get_dbconnection() 
     cur = conn.cursor()
     sqlquery = "select titulo from encuesta;"
@@ -185,6 +188,26 @@ def listaE():
     cur.close()  
     conn.close()
     return render_template("lista_encuesta.html",titulos=titulos,id_es=id_es)
+#--------------------------Inserta la descripcion--------------------------------------------}
+def insertDescripcion():
+    print("insertDescripcion!!")
+    descripcion='NOME FUNCIONA EL PRIMER BOTON T.T'
+    id='encuesta_1'
+    conn = get_dbconnection() 
+    cur = conn.cursor()
+    # update encuesta set descripcion='descripcion de prueba' WHERE id_e='id5';
+    sqlquery = "UPDATE encuesta SET descripcion = \'" + descripcion + "\' WHERE id_e=\'" + id + "\';"
+    cur.execute(sqlquery)
+    cur.close()
+    cur = conn.cursor() 
+    sqlquery2 = "select * from encuesta WHERE id_e=\'" + id + "\';"
+    cur.execute(sqlquery2)
+    row = cur.fetchall() 
+    cur.close()
+    print(row)
+    conn.close()
+                       
+    
 
 #------------------- Manejo de Página de Previsualización de Encuesta ----------------------
 @app.route('/previsualizar/<string:id_e>')    #Url con la lista, tiene la id de encuesta en la url
