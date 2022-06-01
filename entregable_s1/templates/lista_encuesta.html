@@ -28,7 +28,7 @@
 
     <main>
         <div class="container">
-            <form>
+            
             {% for i in range(titulos|length) %}
             <div class="row card m-5">
                 <h3><label class="card-title">{{ titulos[i][0] }}</label></h3>
@@ -48,35 +48,37 @@
                         <input class="btn btn-primary" type="submit" value="preview" formaction="./previsualizar/{{id_es[i][0]}}">
                         <input class="btn btn-primary" type="submit" value="send" formaction=" {{ url_for('enviar_encuesta',id_e=id_es[i][0]) }} ">
                         <input class="btn btn-primary" type="submit" value="respuestas" formaction="{{ url_for('respuestas',id_e=id_es[i][0]) }}">
-                        <form action="" method="post">
-                            <input id="prodId" name="prodId" type="hidden" value="{{id_es[i][0]}}">
-                            <input class="btn btn-primary" type="submit" value="Eliminar" formaction="" name="signup" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <input class="btn btn-primary" type="submit" value="Eliminar" name="" data-bs-toggle="modal" data-bs-target="#exampleModal{{id_es[i][0]}}">
                             
                             <!-- Modal -->
-                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="exampleModal{{id_es[i][0]}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Esta seguro de eliminar la encuesta?</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Una vez eliminada los cambios no son reversibles.
-                                    </div>
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Esta seguro de eliminar la encuesta "{{ titulos[i][0]}}"?</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Una vez eliminada los cambios son irreversibles.
+                                        </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="button" class="btn btn-primary">Eliminar</button>
+                                        <form action="" method="post">
+                                            <input id="prodId" name="prodId" type="hidden" value="{{id_es[i][0]}}">
+                                            <input class="btn btn-primary" type="submit" value="Eliminar" name="signup">
+                                        </form>
+                                        <!-- <button type="button" class="btn btn-primary" >Eliminar</button> -->
                                     </div>
                                     </div>
                                 </div>
-                                </div>
+                            </div>
 
 
                         </form>
                     </div>                       
             </div>
             {% endfor %}
-            </form>
+
         </div>
 
         <div class="container" style="margin-top: 15vh;">

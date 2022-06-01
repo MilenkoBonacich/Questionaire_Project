@@ -176,9 +176,11 @@ def listaE():
             descripcion=request.form['descrip']
             ids=request.form['prodId']  
             insertDescripcion(ids,descripcion)
-        # elif request.form['signup']=='Eliminar':
-            # print("HOLAAAAA")
-            # ids=request.form['prodId']
+        elif request.form['signup']=='Eliminar':
+            print("HOLAAAAA")
+            ids=request.form['prodId']
+            
+            print(ids)
             # eliminarEncuesta(ids)
     conn = get_dbconnection()
     cur = conn.cursor()
