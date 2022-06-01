@@ -45,9 +45,11 @@
                         </form>
                     </div>
                     <div class="card-body d-grid gap-2 d-md-flex justify-content-md-end">
+                        <form action="" method="get">
                         <input class="btn btn-primary" type="submit" value="preview" formaction="./previsualizar/{{id_es[i][0]}}">
                         <input class="btn btn-primary" type="submit" value="send" formaction=" {{ url_for('enviar_encuesta',id_e=id_es[i][0]) }} ">
                         <input class="btn btn-primary" type="submit" value="respuestas" formaction="{{ url_for('respuestas',id_e=id_es[i][0]) }}">
+                        </form>
                         <input class="btn btn-primary" type="submit" value="Eliminar" name="" data-bs-toggle="modal" data-bs-target="#exampleModal{{id_es[i][0]}}">
                             
                             <!-- Modal -->
