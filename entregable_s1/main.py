@@ -274,9 +274,19 @@ def enviar_encuesta(id_e):
     return redirect(url_for('listaE'))
 
 #-------------------------- Manejo de Página de lista de encuestas ----------------------------
-@app.route("/lista-encuestas")
+@app.route("/lista-encuestas", methods=['GET','POST'])
 @login_required
 def listaE():
+    if request.method == 'POST':
+        if request.form['signup']=='ok':
+            descripcion=request.form['descrip']
+            ids=request.form['prodId']  
+            insertDescripcion(ids,descripcion)
+        elif request.form['signup']=='Eliminar':
+            # print("HOLAAAAA")
+            ids=request.form['prodId']
+            # print(ids)
+            eliminarEncuesta(ids)
     conn = get_dbconnection() 
     cur = conn.cursor()
     sqlquery = "select titulo from encuesta;"
@@ -289,9 +299,52 @@ def listaE():
     cur.execute(sqlquery2)
     row = cur.fetchall() 
     id_es=row
+    cur.close()
+    cur=conn.cursor()
+    sqlquery3="select descripcion from encuesta"
+    cur.execute(sqlquery3)
+    row = cur.fetchall() 
+    descripciones=row
     cur.close()  
     conn.close()
-    return render_template("lista_encuesta.html",titulos=titulos,id_es=id_es)
+    return render_template("lista_encuesta.html",titulos=titulos,id_es=id_es,descripciones=descripciones)
+#--------------------------Inserta la descripcion--------------------------------------------}
+def insertDescripcion(id,descripcion):
+    print("insertDescripcion!!")
+    # descripcion='Veamos si funca'
+    # id='encuesta_2'
+    conn = get_dbconnection() 
+    cur = conn.cursor()
+    # update encuesta set descripcion='descripcion de prueba' WHERE id_e='id5';
+    sqlquery = "UPDATE encuesta SET descripcion = \'" + descripcion + "\' WHERE id_e=\'" + id + "\';"
+    cur.execute(sqlquery)
+    conn.commit()
+    cur.close()
+    # cur = conn.cursor() 
+    # sqlquery2 = "select * from encuesta WHERE id_e=\'" + id + "\';"
+    # cur.execute(sqlquery2)
+    # row = cur.fetchall() 
+    # cur.close()
+    # print(row)
+    conn.close()    
+#-------------------------Funcion Eliminar Encuesta-------------------------------#                    
+def eliminarEncuesta(id):
+    print("insertDescripcion!!")
+    # descripcion='Veamos si funca'
+    # id='encuesta_2'
+    conn = get_dbconnection() 
+    cur = conn.cursor()
+    # update encuesta set descripcion='descripcion de prueba' WHERE id_e='id5';
+    sqlquery = "DELETE FROM encuesta WHERE id_e=\'" + id + "\';"
+    cur.execute(sqlquery)
+    conn.commit()
+    cur.close()
+   
+    conn.close()  
+
+
+
+
 
 #------------------- Manejo de Página de Previsualización de Encuesta ----------------------
 @app.route('/previsualizar/<string:id_e>')    #Url con la lista, tiene la id de encuesta en la url

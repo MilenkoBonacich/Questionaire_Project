@@ -138,6 +138,7 @@
 
                 </ol>
             <input type="submit" name="crear" value="Crear Encuesta"/>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         </form>
     </body>
 </html>

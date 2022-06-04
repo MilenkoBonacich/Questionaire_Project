@@ -5,35 +5,106 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ver Encuestas</title>
-    <link rel="stylesheet" href="/static/css/stylewatchE.css">
+    <link rel="stylesheet" href="/static/css/stylewatchEb.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 <body>
 
     <header>
-        <h1><a href="./">Bienvenido Admin!</a></h1>
-        <h2>Que encuesta desea previsualizar?</h2>
+
+            <nav class="navbar navbar-dark bg-dark justify-content-center " style="height: 14vh;">
+            <figure>
+                <a href="./"><img src="../static/imgs/logoencuesta.png" alt="Logo Encuestas" style="height: 12vh;"></a>
+            </figure>
+        </nav>
+
+
     </header>
 
-    <main>
-        <div class="contenedor">
-            <form>
-            {% for i in range(titulos|length) %}
-                
-            <label>{{ titulos[i][0] }}           
-            <input type="submit" value="preview" formaction="./previsualizar/{{id_es[i][0]}}">
-            <input type="submit" value="send" formaction=" {{ url_for('enviar_encuesta',id_e=id_es[i][0]) }} ">
-            <input type="submit" value="respuestas" formaction="{{ url_for('respuestas',id_e=id_es[i][0]) }}">
-            <input type="submit" value="editar datos" formaction="./editarDatosEncuesta/{{id_es[i][0]}}">
-            </label>
-            {% endfor %}
-            
-            
+    <!-- <header>
+        <h1><a href="./">Bienvenido Admin!</a></h1>
+        <h2>Que encuesta desea previsualizar?</h2>
+    </header> -->
 
-            </form>
+    <main>
+        <div class="container">
+            
+            {% for i in range(titulos|length) %}
+            <div class="row card m-5">
+                <h3><label class="card-title">{{ titulos[i][0] }}</label></h3>
+                    {% if descripciones[i][0] != None %}
+                        <h6 class="descrips">{{descripciones[i][0]}}</h5>
+                    {% endif %}
+                    <div class="form-group">
+                        <form action="" method="POST">
+                        <label for="exampleFormControlTextarea1">Descripcion</label>
+                        <input class="form-control" id="exampleFormControlTextarea1" rows="3" type="text" name="descrip" />
+                        <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea> -->
+                        <input id="prodId" name="prodId" type="hidden" value="{{id_es[i][0]}}">
+                        <input id="exampleFormControlTextarea1" class="btn btn-primary" type="submit" id="send-signup" name="signup" value="ok">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        </form>
+                    </div>
+                    <div class="card-body d-grid gap-2 d-md-flex justify-content-md-end">
+                        <form action="" method="get">
+                            <input class="img-bt" type="image" value="preview" formaction="./previsualizar/{{id_es[i][0]}}" src="../static/imgs/file.png" title="Preview">
+                            <input class="img-bt" type="image" value="send" formaction=" {{ url_for('enviar_encuesta',id_e=id_es[i][0]) }} " src="../static/imgs/enviar.png" title="Enviar Encuesta">
+                            <input class="img-bt" type="image" value="respuestas" formaction="{{ url_for('respuestas',id_e=id_es[i][0]) }}" src="../static/imgs/respuestas.png" title="Respuestas">
+                            <input class="btn btn-primary" type="submit" value="editar datos" formaction="./editarDatosEncuesta/{{id_es[i][0]}}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        </form>
+                        <input class="img-bt" type="image" value="Eliminar" name="" data-bs-toggle="modal" data-bs-target="#exampleModal{{id_es[i][0]}}" src="../static/imgs/elimina.png" alt="Eliminar" title="Eliminar">
+                            
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal{{id_es[i][0]}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Esta seguro de eliminar la encuesta "{{ titulos[i][0]}}"?</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Una vez eliminada los cambios son irreversibles.
+                                        </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <form action="" method="post">
+                                            <input id="prodId" name="prodId" type="hidden" value="{{id_es[i][0]}}">
+                                            <input class="btn btn-primary" type="submit" value="Eliminar" name="signup">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        </form>
+                                        <!-- <button type="button" class="btn btn-primary" >Eliminar</button> -->
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </form>
+                    </div>                       
+            </div>
+            {% endfor %}
+
         </div>
-        
+
+        <div class="container" style="margin-top: 15vh;">
+            <footer class="py-3 my-4">
+              <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+              </ul>
+              <p class="text-center text-muted">© 2022 Company, Inc</p>
+            </footer>
+          </div>
 
     </main>
-        
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script>
+        var myModal = document.getElementById('myModal')
+        var myInput = document.getElementById('myInput')
+  
+        myModal.addEventListener('shown.bs.modal', function () {
+          myInput.focus()
+        })
+      </script>
 </body>
 </html>
