@@ -327,6 +327,49 @@ def previsualizar(id_e):
     conn.close()
     return render_template('previsualizar_encuesta.html', titulo=title, preguntas=preguntas, alternativas=alternativas)
 
+
+#----------------------------------------code Alvaro-------------------------
+@app.route('/editarDatosEncuesta/<string:id_e>')
+@login_required
+def editar(id_e):
+    conn = get_dbconnection()                       #Conexión a la base de datos
+    #Seleccionar titulo de la encuesta
+    cur = conn.cursor()
+    sqlquery = "SELECT * from encuesta where encuesta.id_e = \'" + id_e + "\';"
+    cur.execute(sqlquery)
+    row = cur.fetchall()            #Acceso a los datos de la encuesta
+    cur.close()                     #Se cierra el cursor
+    cur = conn.cursor()             #Se reabre el cursor
+    datosEncuesta = []
+    for r in row:                          #Transformamos lista de tuplas a lista.
+        datosEncuesta.append( r[0] )
+        datosEncuesta.append( r[1] )
+        datosEncuesta.append( r[2] )
+        datosEncuesta.append( r[3] )
+        datosEncuesta.append( r[4] )
+        datosEncuesta.append( r[5] )
+    return render_template('editar_datos_encuesta.html',datosEncuesta=datosEncuesta)
+
+@app.route('/guardarDatosEncuesta/<string:id_e>',methods=['POST'])
+@login_required
+def guardarDatos(id_e):
+    datos = []
+    if request.method == 'POST':
+        f = request.form
+        for key in f.keys():
+            for value in f.getlist(key):
+                datos.append(value)
+        conn = get_dbconnection()
+        cur = conn.cursor()
+        cur.execute("UPDATE encuesta SET titulo=%s,f_ini=%s,f_exp=%s,descripcion=%s WHERE id_e=%s",(datos[0],datos[1],datos[2],datos[3],id_e))
+        conn.commit()         
+        cur.close()
+        conn.close()
+    return redirect(url_for('listaE'))    
+
+
+
+
 #Código Franco: Lista de Respuestas--------------------------------------------------------------------------
 @app.route('/encuesta/<string:id_e>/respuestas')    #Url con la lista, tiene la id de encuesta en la url
 @login_required
