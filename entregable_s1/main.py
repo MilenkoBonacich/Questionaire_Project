@@ -1,7 +1,19 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_mail import Mail, Message 
 import psycopg2
 import forms
+
+#Paquetes para login
+from flask_login import LoginManager, login_user, logout_user, login_required
+from werkzeug.security import check_password_hash, generate_password_hash
+from models.ModelUser import ModelUser
+from models.entities.User import User
+from flask_wtf.csrf import CSRFProtect
+import secrets
+#Para los gráficos
+import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
 
 app = Flask(__name__)
 app.config['MAIL_SERVER']='smtp.gmail.com'
@@ -10,6 +22,10 @@ app.config['MAIL_USERNAME'] = 'alvaro.castillo.rifo@gmail.com'
 app.config['MAIL_PASSWORD'] = 'isfiwsphwejadstk'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
+app.config['SECRET_KEY'] = secrets.token_hex(16)
+
+csrf = CSRFProtect()
+csrf.init_app(app)
 mail = Mail(app)
 
 def get_dbconnection():
@@ -21,6 +37,60 @@ def get_dbconnection():
     connstr = "host=%s port=%s user=%s password=%s dbname=%s" % (PSQL_HOST, PSQL_PORT, PSQL_USER, PSQL_PASS, PSQL_DB)
     conn = psycopg2.connect(connstr)
     return conn
+
+def getPlot(labels, sizes):
+    for i in range(len(sizes)):
+        if sizes[i] == 0:
+            sizes[i] = 1
+    print("Debug:")
+    print(labels)
+    print(sizes)
+    fig, ax = plt.subplots()
+    fig.set_size_inches(10, 3)
+    patches, texts, autotexts = ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+#    for text in texts:
+#        text.set_color('grey')for autotext in autotexts:
+#    autotext.set_color('grey')# Equal aspect ratio ensures that pie is drawn as a circle
+    ax.axis('equal')  
+    plt.tight_layout()
+    #Guardar archivo en buffer
+    buf = BytesIO()
+    fig.savefig(buf, format="png")
+    #Imagen a imprimir en html
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    return data
+
+def crearUsers():   #Función para insertar usuarios escritos en el archivo "users"
+    with open('users') as file: #Abrir archivo "users"
+        for line in file:
+            #Cada línea está escrita de la forma: "[Usuario] [Contraseña]"
+            split = line.split()
+            username = split[0]
+            password = split[1]
+            nick = split[2]
+
+            #Checkeo de existencia del usuario, si no existe se inserta el usuario
+            conn = get_dbconnection()
+            cur = conn.cursor()
+            sqlquery =  "select * from usuario where usuario.username = \'" + username + "\';"
+            cur.execute(sqlquery)
+            existente = cur.fetchone()
+            if existente is None:
+                #Se inserta el usuario y el hash de su contraseña
+                sqlquery =  "INSERT INTO usuario VALUES (\'"+username+"\',\'"+generate_password_hash(password)+"\',\'"+nick+"\');"
+                cur.execute( sqlquery )
+                conn.commit()
+                print("Insertado: " + nick)
+            else:
+                print("Existente: " + nick)
+            cur.close()
+            conn.close() 
+crearUsers()
+
+login_manager_app = LoginManager(app)
+@login_manager_app.user_loader
+def load_user(id):
+    return ModelUser.get_by_id(get_dbconnection(),id)
 
 #------------------------------- Función para mandar mails ----------------------------------------------
 # def enviar_encuesta(id_e): 
@@ -44,8 +114,39 @@ def get_dbconnection():
 #     msg.body = "Hola puedes responder tu encuesta aqui: localhost:5000/encuesta/" + id_e + "/responder"
 #     mail.send(msg)  #Envio del email.
 
+#----------------------------- Manejo de login ---------------------------------------------
+@app.route("/ingresar")
+def login():
+    return render_template("login.html")
+@app.route("/ingresar", methods=['POST'])
+def checkLogin():
+    #obtener email y contraseña ingresados
+    username = request.form['username']
+    password = request.form['password']
+    user = User(username,password)
+    logged_user = ModelUser.login(get_dbconnection(), user)
+    if logged_user != None: #Usuario existe
+        if logged_user.password:    #Contraseña coincide
+            login_user(logged_user)
+            return redirect(url_for('pprincipal'))
+        else:
+            flash("Contraseña invalida")
+            return render_template("login.html")
+    else:
+        flash("Usuario no encontrado")
+        return render_template("login.html")
+@app.route("/salir")
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+def status_401(error):
+    return redirect(url_for('login'))
+
+app.register_error_handler(401,status_401)
 #----------------------------------- Manejo Página principal ---------------------------------------
 @app.route("/")
+@login_required
 def pprincipal():
     return render_template("principal.html")
 
@@ -59,6 +160,7 @@ def pprincipal():
 
 #----------------------------------- Manejo Página para crear encuesta ------------------------------
 @app.route('/crear-encuesta/', methods=['GET','POST'])
+@login_required
 def crearE():
     datos=[] #0 = titulo, 1 = id, 2 = fecha inicio, 3 = fecha final
     lp=[] # Preguntas
@@ -99,6 +201,7 @@ def crearE():
 
 #-------------------------- Manejo de Página para agregar emails ------------------------------
 @app.route("/email/registrar")
+@login_required
 def registrar_email():
     emailTF = forms.emailForm()
     emailTF.validate()
@@ -106,6 +209,7 @@ def registrar_email():
 
 #--------------------- Manejo de Página para ver lista de emails ---------------------------------
 @app.route("/email/lista")
+@login_required
 def lista_email():
     
     conn = get_dbconnection()
@@ -127,6 +231,7 @@ def lista_email():
 
 #--------------------- Manejo de Página para finalizar registro de emails -------------------------
 @app.route('/email/registro-exitoso')
+@login_required
 def email_registrado():
 
     email = request.args.get('email', 'no email')
@@ -145,6 +250,7 @@ def email_registrado():
 
 #----------------------------- Manejo de envío de encuestas -------------------------------
 @app.route("/lista-encuestas/enviar/<string:id_e>")
+@login_required
 def enviar_encuesta(id_e):
     #id_e := id de encuesta cuyo url se enviará.
     conn = get_dbconnection()               #Conexión a la base de datos.
@@ -169,6 +275,7 @@ def enviar_encuesta(id_e):
 
 #-------------------------- Manejo de Página de lista de encuestas ----------------------------
 @app.route("/lista-encuestas")
+@login_required
 def listaE():
     conn = get_dbconnection() 
     cur = conn.cursor()
@@ -188,6 +295,7 @@ def listaE():
 
 #------------------- Manejo de Página de Previsualización de Encuesta ----------------------
 @app.route('/previsualizar/<string:id_e>')    #Url con la lista, tiene la id de encuesta en la url
+@login_required
 def previsualizar(id_e):
     conn = get_dbconnection()                       #Conexión a la base de datos
     #Seleccionar titulo de la encuesta
@@ -221,6 +329,7 @@ def previsualizar(id_e):
 
 #Código Franco: Lista de Respuestas--------------------------------------------------------------------------
 @app.route('/encuesta/<string:id_e>/respuestas')    #Url con la lista, tiene la id de encuesta en la url
+@login_required
 def respuestas(id_e):
     conn = get_dbconnection()                       #Conexión a la base de datos
     #Seleccionar titulo de la encuesta
@@ -248,9 +357,21 @@ def respuestas(id_e):
                 """
     cur.execute(sqlquery)
     alternativas = cur.fetchall()   #Arreglo de alternativas
+
+    graficos = []
+    for pregunta in preguntas:
+        labels = []
+        sizes = []
+        for alternativa in alternativas:
+            if alternativa[1] == pregunta[0]:
+                labels.append(alternativa[2])
+                sizes.append(alternativa[3])
+        data = getPlot(labels,sizes)
+        graficos.append(data)
+
     cur.close()
     conn.close()
-    return render_template('respuestas.html', title=title, preguntas=preguntas, alternativas=alternativas)
+    return render_template('respuestas.html', title=title, preguntas=preguntas, graficos=graficos)
 #-----------------------------------------------------------------------------------------------------------------
 #Código franco: Formulario para enviar respuesta------------------------------------------------------------------
 @app.route('/encuesta/<string:id_e>/responder')    #Url con la lista, tiene la id de encuesta en la url
