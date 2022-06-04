@@ -23,6 +23,7 @@
             <input type="submit" value="preview" formaction="./previsualizar/{{id_es[i][0]}}">
             <input type="submit" value="send" formaction=" {{ url_for('enviar_encuesta',id_e=id_es[i][0]) }} ">
             <input type="submit" value="respuestas" formaction="{{ url_for('respuestas',id_e=id_es[i][0]) }}">
+            <input type="submit" value="editar datos" formaction="./editarDatosEncuesta/{{id_es[i][0]}}">
             </label>
             {% endfor %}
             

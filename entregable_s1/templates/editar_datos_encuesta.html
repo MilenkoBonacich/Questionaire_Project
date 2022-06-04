@@ -14,7 +14,7 @@
 	</header>
    
 	<form method="post">
-
+		 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 		<li>Id encuesta: {{ datosEncuesta[0]}}</li>
 		<li>Url:        {{ datosEncuesta[2]}}</li>
 		<p> Titulo encuesta: 

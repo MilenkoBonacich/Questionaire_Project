@@ -359,9 +359,10 @@ def guardarDatos(id_e):
         for key in f.keys():
             for value in f.getlist(key):
                 datos.append(value)
+        print (datos)
         conn = get_dbconnection()
         cur = conn.cursor()
-        cur.execute("UPDATE encuesta SET titulo=%s,f_ini=%s,f_exp=%s,descripcion=%s WHERE id_e=%s",(datos[0],datos[1],datos[2],datos[3],id_e))
+        cur.execute("UPDATE encuesta SET titulo=%s,f_ini=%s,f_exp=%s,descripcion=%s WHERE id_e=%s",(datos[1],datos[2],datos[3],datos[4],id_e))
         conn.commit()         
         cur.close()
         conn.close()
