@@ -184,7 +184,7 @@ def crearE():
             conn = get_dbconnection()
             cur = conn.cursor()
             url = "localhost:5000/encuesta/"+datos[1] +"/responder"
-            cur.execute("INSERT INTO encuesta (id_e,titulo,url,f_ini,f_exp) VALUES (%s,%s,%s,%s,%s)",(datos[1],datos[0],url,datos[2],datos[3],))
+            cur.execute("INSERT INTO encuesta (id_e,titulo,url,f_ini,f_exp,descripcion) VALUES (%s,%s,%s,%s,%s,%s)",(datos[1],datos[0],url,datos[3],datos[4],datos[2]))
             conn.commit() 
             for i in range(len(lp)):
                 id_p = datos[1]+'_p'+str(i)
@@ -294,17 +294,20 @@ def enviar_encuesta(id_e):
     receptores = []                         #receptores := Lista de receptores para el email.
     for r in rows:                          #Transformamos lista de tuplas a lista.
         receptores.append(r[0])
+    cur.execute("select descripcion from encuesta where id_e=\'" +id_e+ "\'")
+    descrip=cur.fetchone()
     cur.close()                             #Desconexión a la base de datos.
     conn.close()
     
     msg1 = "Hola, puedes responder tu encuesta en el siguiente: localhost:5000/encuesta/" + id_e + "/responder\n\n"
+    descr=  "La descripcion de la encuesta es: " + descrip[0] + "\n"
     msg2 = "Si desea dejar de recibir estos correos: localhost:5000/email/desuscripcion/"
 
     with mail.connect() as m_conn:
 
         for dst in receptores:
             
-            message = msg1 + msg2 + dst
+            message = msg1 + descr + msg2 + dst
             subj = "Prueba Encuesta" 
 
             msg = Message(
