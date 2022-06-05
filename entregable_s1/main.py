@@ -378,8 +378,52 @@ def previsualizar(id_e):
     alternativas = cur.fetchall()   #Arreglo de alternativas
     cur.close()
     conn.close()
-    return render_template('previsualizar_encuesta.html', titulo=title, preguntas=preguntas, alternativas=alternativas)
+    return render_template('previsualizar_encuesta.html', id=id_e, titulo=title, preguntas=preguntas, alternativas=alternativas)
 
+# -------------------Edicion de pregunta-------------------------
+@app.route('/previsualizar/<string:id_e>/editar-preguntas/<string:id_p>', methods=['GET','POST'])
+@login_required
+def editar_preguntas(id_e, id_p):
+
+    conn = get_dbconnection()                       #Conexión a la base de datos
+    #Seleccionar titulo de la encuesta
+    cur = conn.cursor()
+    sqlquery = "select * from pregunta where pregunta.id_p = \'" + id_p + "\';"
+    cur.execute(sqlquery)
+    pregunta = cur.fetchone()
+    cur.close()
+    cur = conn.cursor()
+    sqlquery = "select * from alternativa where alternativa.id_p = \'" + id_p + "\';"
+    cur.execute(sqlquery)
+    alternativas = cur.fetchall()
+    cur.close()
+    if request.method == 'POST':
+        p = None
+        la=[] # Lista de alternativas por pregunta
+        if request.form.get('save')=='Guardar Cambios':
+            p = request.form['p']
+            la = request.form.getlist('a')
+            cur=conn.cursor()
+            cur.execute("UPDATE pregunta SET texto=%s WHERE id_p=%s",(p,id_p))
+            for i in range(len(la)):
+                cur.execute("UPDATE alternativa SET texto=%s WHERE id_a=%s",(la[i],alternativas[i][0]))
+            conn.commit()
+            cur.close()
+            conn.close()
+            return redirect(url_for('previsualizar',id_e=id_e))
+    conn.close()
+    return render_template('editar_preguntas.html', pregunta=pregunta, alternativas=alternativas, id_e=id_e)
+
+@app.route('/previsualizar/<string:id_e>/borrar_pregunta/<string:id_p>', methods=['GET','POST'])
+@login_required
+def borrar_pregunta(id_e,id_p):
+    conn = get_dbconnection()
+    cur = conn.cursor()
+    cur.execute("DELETE from pregunta WHERE id_p = \'" + id_p + "\';")
+    conn.commit()
+    cur.close()
+    conn.close()
+    return redirect(url_for('previsualizar',id_e=id_e))
 
 #----------------------------------------code Alvaro-------------------------
 @app.route('/editarDatosEncuesta/<string:id_e>')

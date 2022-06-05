@@ -1,0 +1,45 @@
+<html>
+    <style>
+        html, body {
+            height: 100%;
+        }
+        html {
+            display: table;
+            margin: auto;
+        }
+
+        body {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        textarea{
+            resize: none;
+        }
+        textarea.titulo{
+            font-size: 18px;
+        }
+    </style>
+    <body>
+        <form method="post">
+        <h2>Pregunta: <textarea class="titulo" rows="1" cols="150" maxlength="150" name="p">{{ pregunta[2] }}</textarea></h2>
+            <h2>Alternativas: </h2>
+            <ul>
+            {% for alternativa in alternativas %}
+                {% if alternativa[1] == pregunta[0] %}
+                    <li>
+                        <textarea rows="1" cols="50" maxlength="50" name="a">{{ alternativa[2] }}</textarea>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        
+        </li>
+            <input type="submit" name="save" value="Guardar Cambios">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        </form>
+        <form>
+            <input type="submit" value="Volver" formaction="{{url_for('previsualizar', id_e=id_e)}}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        </form>
+    </body>
+</html>

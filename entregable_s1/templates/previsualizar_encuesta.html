@@ -10,19 +10,36 @@
 <header>
 	<h1><a href="/">Bienvenido Admin!</a></h1>
 </header>
-<h1> {{ titulo }} </h1>
+<style>
+	form {
+    	display: inline-block;
+	}
+</style>
+<script>
+	function confirmation(id_p){
+		if("{{preguntas|length}}"==1){
+			alert('No puede borrar esta pregunta. Tendra que borrar')
+			return false;
+		}else{
+			return confirm('¿Esta seguro que quiere borrar esta pregunta?')
+		}
+	}
+</script>
+<h1> {{ titulo }} </h1> 
 {% for pregunta in preguntas %}
     <ul>
-        <li>{{ pregunta[2] }}
-        	
-        		
-		        	<ul>
-		        	{% for alternativa in alternativas %}
-		        		{% if alternativa[1] == pregunta[0] %}
-		        			<li>{{ alternativa[2] }}</li>
-		        		{% endif %}
-		        	{% endfor %}
-		        	</ul>
+			<li>{{ pregunta[2] }} <form> <button type="submit" formaction="{{ url_for('editar_preguntas', id_e=id, id_p=pregunta[0])}}"> Editar Pregunta</button>
+				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"></form>
+				<form action="{{url_for('borrar_pregunta', id_e=id, id_p=pregunta[0])}}" onsubmit="return confirmation()"><input type="submit" name="erase" id="{{pregunta[0]}}" value="Borrar Pregunta">
+					<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"></form>
+			</li>
+				<ul>
+				{% for alternativa in alternativas %}
+					{% if alternativa[1] == pregunta[0] %}
+						<li>{{ alternativa[2] }}</li>
+					{% endif %}
+				{% endfor %}
+				</ul>
 		    
     	</li>
     </ul>
