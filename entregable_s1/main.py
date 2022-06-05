@@ -246,6 +246,8 @@ def email_registrado():
     cur.close()
     conn.close()
 
+    #flash("Email registrado exitosamente.")
+    #return redirect( url_for('registrar_email') )
     return render_template('email_registrado.html', title='Registration Successful', email=email)
 
 #--------------------- Manejo de Página de Confirmacion Eliminacion Correo - Usuario -------------------------
@@ -276,6 +278,7 @@ def borrar_email(id_em, user):
 
     if user == "susc":
         return "Su correo ha sido eliminado."
+
 
     return redirect(url_for( url ))
 

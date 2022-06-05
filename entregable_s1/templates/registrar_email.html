@@ -1,26 +1,41 @@
 {% extends 'base/email.html' %}
 
 {% block content %}
+
+	<!--
 	<header>
 		<h1><a href="/">Bienvenido Admin!</a></h1>
 	</header>
-	<h2> {{ title }} </h2>
+	-->
+
+	<h2 align="middle"> {{ title }} </h2>
+
+	<div class="flashes">
+		{% for msg in get_flashed_messages() %}
+			<p> {{ msg }} </p>
+		{% endfor %}
+	</div>
 
 	{% from "_macro.html" import render_field %}
-
 	<form>
 		<div class="container">
 			<div class="row">
-				{{ render_field(eTF.email) }}
-				<button type="submit" formaction="{{ url_for('email_registrado') }}" >Register</button>
+				<div class="col-4 offset-4" style="margin-top: 6vh;">
+					<div class="mb-10">
+                        {{ render_field(eTF.email) }}
+                        <button type="submit" formaction="{{ url_for('email_registrado') }}" >Register</button>
+                    </div>
+				</div>
 			</div>
 		</div>
 	</form>
 
 	<br>
 
+	<!--
 	<form>
 		<button type="submit" formaction="{{ url_for('lista_email') }}" >Registered Emails</button>
 	</form>
+	-->
 
 {% endblock %}
