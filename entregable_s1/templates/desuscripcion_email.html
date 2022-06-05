@@ -1,0 +1,24 @@
+{% extends 'base/email.html' %}
+
+{% block content %}
+	
+	<h2> {{ title }} </h2>
+
+	<p> 
+		Su email registrado es: {{ email }}. <br>
+		Desea desincribirse de nuestro servicio de encuestas? <br>
+		Si lo hace, dejara de recibir correos cuando nuestras encuestas esten disponibles.
+	</p>
+
+	<br>
+
+	<form>
+		<button type="submit" formaction="{{ url_for('borrar_email', id_em=email, user=usuario) }}" >
+			SI, deseo desincribirme.
+		</button>
+		<button type="submit" formaction="{{ url_for('pprincipal') }}" >
+			NO, he cambiado de opinion.
+		</button>
+	</form>
+
+{% endblock %}

@@ -248,6 +248,37 @@ def email_registrado():
 
     return render_template('email_registrado.html', title='Registration Successful', email=email)
 
+#--------------------- Manejo de Página de Confirmacion Eliminacion Correo - Usuario -------------------------
+@app.route('/email/desuscripcion/<string:id_em>')
+def desuscripcion_email(id_em):
+
+    return render_template('desuscripcion_email.html', title='Desuscripcion Email', email=id_em, usuario="susc")
+
+#--------------------- Manejo de Página para eliminar emails -------------------------
+@app.route("/email/borrar/<string:user>/<string:id_em>")
+def borrar_email(id_em, user):
+
+    if user == "admin":
+        url = 'lista_email'
+        flash('Correo eliminado exitosamente.')
+    else:
+        url = 'pprincipal'
+
+
+    conn = get_dbconnection()
+    cur = conn.cursor()
+    
+    cur.execute( "DELETE FROM email WHERE id = %s", (id_em,) )
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+    if user == "susc":
+        return "Su correo ha sido eliminado."
+
+    return redirect(url_for( url ))
+
 #----------------------------- Manejo de envío de encuestas -------------------------------
 @app.route("/lista-encuestas/enviar/<string:id_e>")
 @login_required
@@ -262,14 +293,37 @@ def enviar_encuesta(id_e):
         receptores.append(r[0])
     cur.close()                             #Desconexión a la base de datos.
     conn.close()
+    
+    msg1 = "Hola, puedes responder tu encuesta en el siguiente: localhost:5000/encuesta/" + id_e + "/responder\n\n"
+    msg2 = "Si desea dejar de recibir estos correos: localhost:5000/email/desuscripcion/"
+
+    with mail.connect() as m_conn:
+
+        for dst in receptores:
+            
+            message = msg1 + msg2 + dst
+            subj = "Prueba Encuesta" 
+
+            msg = Message(
+                subject = subj,
+                sender = 'alvaro.castillo.rifo@gmail.com',
+                body = message,
+                recipients = [ dst ] )
+
+            m_conn.send( msg )
+
+    
+    """
     msg = Message(  
                 'Prueba-Encuesta',                          #Asunto del email.
                 sender =   'alvaro.castillo.rifo@gmail.com',#Emisor del email.
                 recipients = receptores                     #Receptor del email.
                 )
     #Cuerpo del email
+    
     msg.body = "Hola puedes responder tu encuesta aqui: localhost:5000/encuesta/" + id_e + "/responder"
     mail.send(msg)  #Envio del email.
+    """
 
     return redirect(url_for('listaE'))
 

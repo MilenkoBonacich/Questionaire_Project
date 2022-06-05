@@ -3,10 +3,29 @@
 {% block content %}
 
 	<h2> {{ title }} </h2>
-	
-	{% for i in range (0, index) %}
-		<li> {{ emails[i] }} </li>
-	{% endfor %}
+
+	<div class="flashes">
+		{% for msg in get_flashed_messages() %}
+			<p> {{ msg }} </p>
+		{% endfor %}
+	</div>
+
+	<script type="text/javascript">
+		function confirmation(val = "none"){
+			if( confirm("Esta seguro de elimnar este correo: " + val + "?" ) == true ){
+				window.location.href = 'localhost:5000/email/borrar/admin/' + val
+			}
+		}
+	</script>
+
+	<table>	
+		{% for i in range (0, index) %} 
+			<tr>
+				<td> {{ emails[i] }} </td> 	
+				<td> <button value="{{ emails[i] }}" onclick="confirmation(this.value)" >Delete</button> </td>
+			</tr>
+		{% endfor %}
+	</table>
 
 	<br>
 
