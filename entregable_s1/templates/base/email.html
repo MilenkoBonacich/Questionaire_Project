@@ -46,11 +46,15 @@
                   
                 </ul>
                
-                <a href="/" class="logo" ><img src="../static/imgs/logoencuesta.png" alt="Logo Encuestas" style="height: 12vh;"></a>
+                <div class="offset-3">
+                  <a href="./" class="logo" ><img src="../static/imgs/logoencuesta.png" alt="Logo Encuestas" style="height: 12vh;"></a>
+                </div>
+                
                  
-                <form>
-                  <input type="submit" class= "btn btn-secondary" formaction="{{ url_for('logout') }}" value="Salir">
-              </form>
+                <div class="d-flex ms-auto">
+                  <form>
+                    <input  type="submit" class= "btn btn-secondary" formaction="{{ url_for('logout') }}" value="Salir">
+                  </form>
                 <!-- <ul class="ms-auto">
                     <form class="d-flex">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
