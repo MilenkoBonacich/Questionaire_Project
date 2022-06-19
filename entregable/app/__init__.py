@@ -7,6 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app.models.ModelUser import ModelUser
 from app.models.entities.User import User
 import psycopg2
+import hashlib
 #Para los gráficos
 import matplotlib.pyplot as plt
 import base64
