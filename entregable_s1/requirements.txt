@@ -1,0 +1,7 @@
+Flask
+flask_mail
+psycopg2-binary
+flask_login
+werkzeug
+flask_wtf
+matplotlib
