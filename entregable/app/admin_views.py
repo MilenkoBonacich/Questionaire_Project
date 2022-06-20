@@ -58,20 +58,25 @@ def enviar_encuesta(id_e):
     conn = get_dbconnection()               #Conexión a la base de datos.
     cur = conn.cursor()
     cur.execute("select id from email;")    #Query a base de datos de mails
-    rows = cur.fetchall()                   #Obtención de tuplas (con una única columna)
+    rows = cur.fetchall()                   #Obtención de tuplas de emails (con una única columna)
     receptores = []                         #receptores := Lista de receptores para el email.
-    hash_list = []                          #Lista de hash para los nuevos url's -Franco.
+    hash_list = []                          #Lista de hash los url's únicos -Franco.
     for r in rows:                          #Transformamos lista de tuplas a lista.
-        receptores.append(r[0])
+        email = r[0]
+        receptores.append(email)
         #------------------------------------------- Selección y creación de hash para los url's -Franco.
-        cur.execute("select hash from respondido where email = %s and id_e = %s",(r[0],id_e))
-        h = cur.fetchone()
-        if h is None:
-            s = r[0] + id_e
-            h = hashlib.sha1(s.encode("utf-8")).hexdigest()
-            cur.execute("insert into respondido values(%s,%s,%s,%s)",(r[0],id_e,h,"0"))
+        hashes_existen = "select hash from respondido where email = %s and id_e = %s"
+        cur.execute(hashes_existen,(email,id_e))
+        h = cur.fetchone()  #h := Caso1: String con hash | Caso2: tupla con hash
+        
+        if h is None:       #Caso1: no existen los hashes (Primera vez que se envía encuesta)
+            s = email + id_e
+            h = hashlib.sha1(s.encode("utf-8")).hexdigest()     #Se crea hash en base a string formato "[email][id_encuesta]"
+            insetar_respondido = "insert into respondido values(%s,%s,%s,%s)"
+            cur.execute(insetar_respondido,(email,id_e,h,"0"))  #Se crea verificador para respuesta del email en encuesta id_e
+            conn.commit()
             hash_list.append(h)
-        else:
+        else:               #Caso2: existe hash asociado al mail y encuesta
             hash_list.append(h[0])
         #-----------------------------------------------------------------------------------------------
     cur.execute("select descripcion from encuesta where id_e=\'" +id_e+ "\'")
@@ -88,7 +93,7 @@ def enviar_encuesta(id_e):
         for i, dst in enumerate(receptores):
 
             message = msg1 + url_for('responder',id_r=hash_list[i]) + descr + msg2 + dst
-
+            print(message)
             subj = "Prueba Encuesta" 
 
             msg = Message(

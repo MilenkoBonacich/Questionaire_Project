@@ -6,17 +6,17 @@ def responder():
     conn = get_dbconnection()                       #Conexión a la base de datos
     
     cur = conn.cursor()
-    sqlquery = "select id_e,respondido from respondido where hash = %s;"
+    sqlquery = "select id_e,respondido from respondido where hash = %s;"    #Seleccionar id y booleano
     emailhash = request.args.get('id_r')
     cur.execute(sqlquery, (emailhash,))
     row = cur.fetchone()
-    if row is None:
+    if row is None:             #Caso 1: Encuesta no existe.
         return "<h1>Encuesta no encontrada :(</h1>"
-    else:
+    else:                       #Caso 2: Encuesta ya fue respondida.
         if row[1] == True:
-            return return "<h1>Ya respondiste esta encuesta, gracias por tu respuesta!</h1>"
+            return "<h1>Ya respondiste esta encuesta, gracias por tu respuesta!</h1>"
+                                #Caso 3: Encuesta puede responderse.
     id_e = row[0]
-
     #Seleccionar titulo de la encuesta
     sqlquery = "select * from encuesta where encuesta.id_e = \'" + id_e + "\';"
     cur.execute(sqlquery)
@@ -45,10 +45,23 @@ def responder():
     conn.close()
     return render_template('responder.html', title=title, preguntas=preguntas, alternativas=alternativas)
 
-@app.route('/encuesta/<string:id_e>/responder', methods={'POST'})
-def enviar(id_e):
+@app.route('/responder', methods={'POST'})
+def enviar():
     conn = get_dbconnection()
     cur = conn.cursor()
+
+    sqlquery = "select email,id_e,respondido from respondido where hash = %s;"    #Seleccionar id y booleano
+    emailhash = request.args.get('id_r')
+    cur.execute(sqlquery, (emailhash,))
+    row = cur.fetchone()
+    if row[2] == True:  #Caso: Reenvío de formulario?(No estoy seguro si esto puede suceder, pero solo por asegurarse)
+            return "<h1>Ya respondiste esta encuesta, gracias por tu respuesta!</h1>"
+    email = row[0]
+    id_e = row[1]
+    sqlquery = """ UPDATE respondido
+                    SET respondido = %s
+                    WHERE email = %s AND id_e = %s """
+    cur.execute(sqlquery,('1',email,id_e))
 
     opciones = list(request.form.keys())
     opciones.remove("enviar_respuesta")
