@@ -111,7 +111,7 @@ app.config['MAIL_PASSWORD'] = 'isfiwsphwejadstk'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['SECRET_KEY'] = secrets.token_hex(16)
-
+URL = "localhost:5002"
 csrf = CSRFProtect()
 csrf.init_app(app)
 mail = Mail(app)

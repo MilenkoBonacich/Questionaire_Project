@@ -1,6 +1,7 @@
 from app import app, login_required, render_template, request,  redirect, url_for
 from app import Message, mail, hashlib
 from app import get_dbconnection, insertDescripcion, getPlot, eliminarEncuesta
+from app import URL
 #----------------------------------- Manejo Página principal ---------------------------------------
 @app.route("/")
 @login_required
@@ -68,7 +69,7 @@ def enviar_encuesta(id_e):
         if h is None:
             s = r[0] + id_e
             h = hashlib.sha1(s.encode("utf-8")).hexdigest()
-            cur.execute("insert into respondido values(%s,%s,%s,%s)",(r[0],id_e,h,0))
+            cur.execute("insert into respondido values(%s,%s,%s,%s)",(r[0],id_e,h,"0"))
             hash_list.append(h)
         else:
             hash_list.append(h[0])
@@ -77,25 +78,26 @@ def enviar_encuesta(id_e):
     descrip=cur.fetchone()
     cur.close()                             #Desconexión a la base de datos.
     conn.close()
-    
-    msg1 = "Hola, puedes responder tu encuesta en el siguiente: localhost:5000/encuesta/" + id_e + "/responder\n\n"
-    descr=  "La descripcion de la encuesta es: " + descrip[0] + "\n"
-    msg2 = "Si desea dejar de recibir estos correos: localhost:5000/email/desuscripcion/"
 
-    # with mail.connect() as m_conn:
+    msg1 = "Hola, puedes responder tu encuesta en el siguiente: " + URL
+    descr=  "\n\nLa descripcion de la encuesta es: " + descrip[0] + "\n"
+    msg2 = "Si desea dejar de recibir estos correos: " + URL + "/email/desuscripcion/"
 
-    #     for dst in receptores:
-            
-    #         message = msg1 + descr + msg2 + dst
-    #         subj = "Prueba Encuesta" 
+    with mail.connect() as m_conn:
 
-    #         msg = Message(
-    #             subject = subj,
-    #             sender = 'alvaro.castillo.rifo@gmail.com',
-    #             body = message,
-    #             recipients = [ dst ] )
+        for i, dst in enumerate(receptores):
 
-    #         m_conn.send( msg )
+            message = msg1 + url_for('responder',id_r=hash_list[i]) + descr + msg2 + dst
+
+            subj = "Prueba Encuesta" 
+
+            msg = Message(
+                subject = subj,
+                sender = 'alvaro.castillo.rifo@gmail.com',
+                body = message,
+                recipients = [ dst ] )
+
+            #m_conn.send( msg )
 
     return redirect(url_for('listaE'))
 

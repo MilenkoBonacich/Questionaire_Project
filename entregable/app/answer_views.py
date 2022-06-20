@@ -1,11 +1,23 @@
 from app import app, get_dbconnection, render_template, request
 
 #Código franco: Formulario para enviar respuesta------------------------------------------------------------------
-@app.route('/encuesta/<string:id_e>/responder')    #Url con la lista, tiene la id de encuesta en la url
-def responder(id_e):
+@app.route('/responder')    #Url con la lista, tiene la id de encuesta en la url
+def responder():
     conn = get_dbconnection()                       #Conexión a la base de datos
-    #Seleccionar titulo de la encuesta
+    
     cur = conn.cursor()
+    sqlquery = "select id_e,respondido from respondido where hash = %s;"
+    emailhash = request.args.get('id_r')
+    cur.execute(sqlquery, (emailhash,))
+    row = cur.fetchone()
+    if row is None:
+        return "<h1>Encuesta no encontrada :(</h1>"
+    else:
+        if row[1] == True:
+            return return "<h1>Ya respondiste esta encuesta, gracias por tu respuesta!</h1>"
+    id_e = row[0]
+
+    #Seleccionar titulo de la encuesta
     sqlquery = "select * from encuesta where encuesta.id_e = \'" + id_e + "\';"
     cur.execute(sqlquery)
     row = cur.fetchone()            #Acceso a los datos de la encuesta
