@@ -10,6 +10,16 @@ def registrar_email():
     emailTF.validate()
     return render_template('registrar_email.html', title='Registration', eTF=emailTF)
 
+#-------------------------- Manejo de Página para agregar emails ------------------------------
+
+@app.route("/registro")
+
+def registrar_emailpublico():
+    emailTF = forms.emailForm()
+    emailTF.validate()
+    
+    return render_template('registrar_emailpublico.html', title='Registration', eTF=emailTF)
+
 #--------------------- Manejo de Página para ver lista de emails ---------------------------------
 @app.route("/email/lista")
 @login_required

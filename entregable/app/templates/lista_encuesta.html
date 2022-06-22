@@ -14,7 +14,7 @@
 
             <nav class="navbar navbar-dark bg-dark justify-content-center " style="height: 14vh;">
             <figure>
-                <a href="./"><img src="../static/imgs/logoencuesta.png" alt="Logo Encuestas" style="height: 12vh;"></a>
+                <a href="{{ url_for('pprincipal') }}"><img src="../static/imgs/logoencuesta.png" alt="Logo Encuestas" style="height: 12vh;"></a>
             </figure>
         </nav>
 
@@ -39,7 +39,7 @@
                         <form action="" method="POST">
                         <label for="exampleFormControlTextarea1">Descripcion</label>
                         <input class="form-control" id="exampleFormControlTextarea1" rows="3" type="text" name="descrip" />
-                        <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea> -->
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea> -->
                         <!-- <input id="prodId" name="prodId" type="hidden" value="{{id_es[i][0]}}">
                         <input id="exampleFormControlTextarea1" class="btn btn-primary" type="submit" id="send-signup" name="signup" value="ok">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -50,7 +50,7 @@
                             <input class="img-bt" type="image" value="preview" formaction="./previsualizar/{{id_es[i][0]}}" src="../static/imgs/file.png" title="Preview">
                             <input class="img-bt" type="image" value="send" formaction=" {{ url_for('enviar_encuesta',id_e=id_es[i][0]) }} " src="../static/imgs/enviar.png" title="Enviar Encuesta">
                             <input class="img-bt" type="image" value="respuestas" formaction="{{ url_for('respuestas',id_e=id_es[i][0]) }}" src="../static/imgs/respuestas.png" title="Respuestas">
-                            <input class="btn btn-primary" type="submit" value="editar datos" formaction="./editarDatosEncuesta/{{id_es[i][0]}}">
+                            <input class="img-bt" type="image" value="editar datos" formaction="./editarDatosEncuesta/{{id_es[i][0]}}" src="../static/imgs/editar.png" title="Editar Encuesta">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         </form>
                         <input class="img-bt" type="image" value="Eliminar" name="" data-bs-toggle="modal" data-bs-target="#exampleModal{{id_es[i][0]}}" src="../static/imgs/elimina.png" alt="Eliminar" title="Eliminar">

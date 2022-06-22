@@ -1,8 +1,14 @@
 from app import app, login_required, render_template, request,  redirect, url_for
 from app import Message, mail
 from app import get_dbconnection, insertDescripcion, getPlot, eliminarEncuesta
-#----------------------------------- Manejo Página principal ---------------------------------------
+#----------------------------------- Manejo Página principal Public ---------------------------------------
+
 @app.route("/")
+def principal():
+    return render_template("ingreso.html")
+
+#----------------------------------- Manejo Página principal Admin ---------------------------------------
+@app.route("/index")
 @login_required
 def pprincipal():
     return render_template("principal.html")
