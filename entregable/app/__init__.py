@@ -36,10 +36,14 @@ def getPlot(labels, sizes):
     sizes = [x for i,x in enumerate(sizes) if i not in empty]
     if len(labels) > 0:
         fig, ax = plt.subplots()
-        fig.set_size_inches(10, 3)
-        patches, texts, autotexts = ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+        fig.set_size_inches(8, 3)
+        fig.subplots_adjust(left=0.2,wspace = 0.2)
+        patches, texts, autotexts = ax.pie(sizes, autopct='%1.1f%%', startangle=90)
         ax.axis('equal')  
         plt.tight_layout()
+        plt.legend(labels,bbox_to_anchor=(1,0.5), loc="center right", fontsize=10, 
+           bbox_transform=plt.gcf().transFigure)
+        plt.subplots_adjust(left=0.0, bottom=0.1, right=0.45)
         #Guardar archivo en buffer
         buf = BytesIO()
         fig.savefig(buf, format="png")
