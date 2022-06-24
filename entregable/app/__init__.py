@@ -25,22 +25,28 @@ def get_dbconnection():
     return conn
 
 def getPlot(labels, sizes):
+    empty = [i for i in range(len(sizes)) if sizes[i] == 0]
     for i in range(len(sizes)):
         if sizes[i] == 0:
-            sizes[i] = 1
-    print("Debug:")
-    print(labels)
-    print(sizes)
-    fig, ax = plt.subplots()
-    fig.set_size_inches(10, 3)
-    patches, texts, autotexts = ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
-    ax.axis('equal')  
-    plt.tight_layout()
-    #Guardar archivo en buffer
-    buf = BytesIO()
-    fig.savefig(buf, format="png")
-    #Imagen a imprimir en html
-    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    #        empty.append(labels[i])
+    #        del labels[i]
+    #        del sizes[i]
+             sizes[i] = 1
+    labels = [x for i,x in enumerate(labels) if i not in empty]
+    sizes = [x for i,x in enumerate(sizes) if i not in empty]
+    if len(labels) > 0:
+        fig, ax = plt.subplots()
+        fig.set_size_inches(10, 3)
+        patches, texts, autotexts = ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+        ax.axis('equal')  
+        plt.tight_layout()
+        #Guardar archivo en buffer
+        buf = BytesIO()
+        fig.savefig(buf, format="png")
+        #Imagen a imprimir en html
+        data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    else:
+        data = None
     return data
 
 def crearUsers():   #Función para insertar usuarios escritos en el archivo "users"

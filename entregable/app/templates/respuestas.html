@@ -15,7 +15,11 @@
 <ul>
 {% for i in range(preguntas|length) %}
         <li>{{ preguntas[i][2] }}<!-- Tercer atributo en la tabla pregunta: título de la pregunta -->
-        	<br><img src='data:image/png;base64,{{ graficos[i] }}'/>
+        	{% if graficos[i] != None %}
+        		<br><img src='data:image/png;base64,{{ graficos[i] }}'/>
+        	{% else %}
+        		<br><mensage>No hay respuestas aún</mensage>
+        	{% endif %}
     	</li>
 {% endfor %}
 </ul>
