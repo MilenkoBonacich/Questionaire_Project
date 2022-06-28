@@ -8,7 +8,7 @@ from app import login_required
 def registrar_email():
     emailTF = forms.emailForm()
     emailTF.validate()
-    return render_template('registrar_email.html', title='Registration', eTF=emailTF)
+    return render_template('registrar_email.html', title='Registro de Correos', eTF=emailTF)
 
 #--------------------- Manejo de Página para ver lista de emails ---------------------------------
 @app.route("/email/lista")
@@ -30,7 +30,7 @@ def lista_email():
         emails.append( r[0] )
 
     length = len(emails)
-    return render_template('lista_email.html', title='Email DataBase', emails=emails, index=length )
+    return render_template('lista_email.html', title='Lista Emails', emails=emails, index=length )
 
 #--------------------- Manejo de Página para finalizar registro de emails -------------------------
 @app.route('/email/registro-exitoso')
@@ -38,20 +38,36 @@ def lista_email():
 def email_registrado():
 
     email = request.args.get('email', 'no email')
+    message = None
+    category = None
 
+    
     conn = get_dbconnection()
     cur = conn.cursor()
-    
-    sqlquery = """ INSERT INTO email (id) VALUES ('%s') """ %(email)
-    cur.execute( sqlquery )
-    conn.commit()
 
+    cur.execute( "SELECT * FROM email WHERE email.id=%s;", (email,) )
+    row = cur.fetchone()
     cur.close()
-    conn.close()
 
-    #flash("Email registrado exitosamente.")
-    #return redirect( url_for('registrar_email') )
-    return render_template('email_registrado.html', title='Registration Successful', email=email)
+    if row is None :
+        cur = conn.cursor()
+        cur.execute( "INSERT INTO email (id) VALUES (%s)", (email,) )
+        conn.commit()
+
+        message = "Correo registrado exitosamente"
+        category = "success"
+
+        cur.close()
+        conn.close()
+
+    else :
+        message = "Este correo ya se encuentra registrado"
+        category = "danger"
+        conn.close()
+
+
+    flash( message, category )
+    return redirect( url_for('registrar_email') )
 
 #--------------------- Manejo de Página de Confirmacion Eliminacion Correo - Usuario -------------------------
 @app.route('/email/desuscripcion/<string:id_em>')
