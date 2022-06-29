@@ -97,31 +97,44 @@ def enviar_encuesta(id_e):
 @app.route("/lista-encuestas", methods=['GET','POST'])
 @login_required
 def listaE():
+    sqlquery = "select titulo from encuesta;"
+    sqlquery2 = "select id_e from encuesta;"
+    sqlquery3="select descripcion from encuesta;"
+
     if request.method == 'POST':
-        if request.form['signup']=='ok':
-            descripcion=request.form['descrip']
-            ids=request.form['prodId']  
-            insertDescripcion(ids,descripcion)
-        elif request.form['signup']=='Eliminar':
+        if request.form['signup']=='Eliminar':
             # print("HOLAAAAA")
             ids=request.form['prodId']
             # print(ids)
             eliminarEncuesta(ids)
+        if request.form['signup']=='Fecha de Inicio':
+            sqlquery = "select titulo from encuesta ORDER BY f_ini;"
+            sqlquery2 = "select id_e from encuesta ORDER BY f_ini;"          
+            sqlquery3="select descripcion from encuesta ORDER BY f_ini;"
+        if request.form['signup']=='Fecha de Expiracion':
+            sqlquery = "select titulo from encuesta ORDER BY f_exp;"
+            sqlquery2 = "select id_e from encuesta ORDER BY f_exp;"          
+            sqlquery3="select descripcion from encuesta ORDER BY f_exp;"
+        if request.form['signup']=='Alfabéticamente':
+            sqlquery = "select titulo from encuesta ORDER BY titulo ASC;"
+            sqlquery2 = "select id_e from encuesta ORDER BY titulo ASC;"          
+            sqlquery3="select descripcion from encuesta ORDER BY titulo ASC;"
+
     conn = get_dbconnection() 
     cur = conn.cursor()
-    sqlquery = "select titulo from encuesta;"
+    
     cur.execute(sqlquery)
     row = cur.fetchall() 
     titulos=row
     cur.close()                     
     cur = conn.cursor() 
-    sqlquery2 = "select id_e from encuesta;" 
+    
     cur.execute(sqlquery2)
     row = cur.fetchall() 
     id_es=row
     cur.close()
     cur=conn.cursor()
-    sqlquery3="select descripcion from encuesta"
+    
     cur.execute(sqlquery3)
     row = cur.fetchall() 
     descripciones=row
