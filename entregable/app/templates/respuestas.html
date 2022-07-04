@@ -2,22 +2,57 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 	<!-- Título de la encuesta pasado por argumentos -->
 	<title>{{ title }}</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 <body>
-<header>
-	<h1><a href="/">Bienvenido, {{ current_user.nick }}!</a></h1>
-</header>
-<!-- Se agrega el título como h1 por estética -->
-<h1> {{ title }} </h1>
-<!-- Se itera en las preguntas -->
-<ul>
-{% for i in range(preguntas|length) %}
-        <li>{{ preguntas[i][2] }}<!-- Tercer atributo en la tabla pregunta: título de la pregunta -->
-        	<br><img src='data:image/png;base64,{{ graficos[i] }}'/>
-    	</li>
-{% endfor %}
-</ul>
+	<header>
+
+		<!-- <h1><a href="/">Bienvenido, {{ current_user.nick }}!</a></h1> -->
+    		<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+            <div class="container-fluid ">
+             
+              
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">  
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="h3 nav-link active" aria-current="page" href="/lista-encuestas" >{{ title }}</a>
+                  </li>
+                </ul>
+                <div class="offset-1">
+                  <a href="/" class="logo" ><img src="../../static/imgs/logoencuesta.png" alt="Logo Encuestas" style="height: 12vh;"></a>
+                </div>
+                
+                 
+<!--                 <div class="d-flex ms-auto">
+                  <form>
+                    <input  type="submit" class= "btn btn-secondary" formaction="{{ url_for('logout') }}" value="Salir">
+                  </form>
+               </div> -->
+
+              </div>
+            </div>
+          </nav>
+	</header>
+	<!-- Se itera en las preguntas -->
+	<ul class="list-group list-group-flush">
+	{% for i in range(preguntas|length) %}
+	        <li class="list-group-item">
+	        	<p class="h5">{{ preguntas[i][2] }}</p>
+	        	<!-- Tercer atributo en la tabla pregunta: título de la pregunta -->
+	        	{% if graficos[i] != None %}
+	        		<br><img class="rounded mx-auto d-block" src='data:image/png;base64,{{ graficos[i] }}'/>
+	        	{% else %}
+	        		<p class="h6 text-muted">No hay respuestas aún</p>
+	        	{% endif %}
+	    	</li>
+	{% endfor %}
+	</ul>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
 </body>
 </html>

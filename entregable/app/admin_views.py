@@ -1,6 +1,7 @@
 from app import app, login_required, render_template, request,  redirect, url_for
-from app import Message, mail
+from app import Message, mail, hashlib
 from app import get_dbconnection, insertDescripcion, getPlot, eliminarEncuesta
+from app import URL
 #----------------------------------- Manejo Página principal ---------------------------------------
 @app.route("/")
 @login_required
@@ -57,24 +58,42 @@ def enviar_encuesta(id_e):
     conn = get_dbconnection()               #Conexión a la base de datos.
     cur = conn.cursor()
     cur.execute("select id from email;")    #Query a base de datos de mails
-    rows = cur.fetchall()                   #Obtención de tuplas (con una única columna)
+    rows = cur.fetchall()                   #Obtención de tuplas de emails (con una única columna)
     receptores = []                         #receptores := Lista de receptores para el email.
+    hash_list = []                          #Lista de hash los url's únicos -Franco.
     for r in rows:                          #Transformamos lista de tuplas a lista.
-        receptores.append(r[0])
+        email = r[0]
+        receptores.append(email)
+        #------------------------------------------- Selección y creación de hash para los url's -Franco.
+        hashes_existen = "select hash from respondido where email = %s and id_e = %s"
+        cur.execute(hashes_existen,(email,id_e))
+        h = cur.fetchone()  #h := Caso1: String con hash | Caso2: tupla con hash
+        
+        if h is None:       #Caso1: no existen los hashes (Primera vez que se envía encuesta)
+            s = email + id_e
+            h = hashlib.sha1(s.encode("utf-8")).hexdigest()     #Se crea hash en base a string formato "[email][id_encuesta]"
+            insetar_respondido = "insert into respondido values(%s,%s,%s,%s)"
+            cur.execute(insetar_respondido,(email,id_e,h,"0"))  #Se crea verificador para respuesta del email en encuesta id_e
+            conn.commit()
+            hash_list.append(h)
+        else:               #Caso2: existe hash asociado al mail y encuesta
+            hash_list.append(h[0])
+        #-----------------------------------------------------------------------------------------------
     cur.execute("select descripcion from encuesta where id_e=\'" +id_e+ "\'")
     descrip=cur.fetchone()
     cur.close()                             #Desconexión a la base de datos.
     conn.close()
-    
-    msg1 = "Hola, puedes responder tu encuesta en el siguiente: localhost:5000/encuesta/" + id_e + "/responder\n\n"
-    descr=  "La descripcion de la encuesta es: " + descrip[0] + "\n"
-    msg2 = "Si desea dejar de recibir estos correos: localhost:5000/email/desuscripcion/"
+
+    msg1 = "Hola, puedes responder tu encuesta en el siguiente: " + URL
+    descr=  "\n\nLa descripcion de la encuesta es: " + descrip[0] + "\n"
+    msg2 = "Si desea dejar de recibir estos correos: " + URL + "/email/desuscripcion/"
 
     with mail.connect() as m_conn:
 
-        for dst in receptores:
-            
-            message = msg1 + descr + msg2 + dst
+        for i, dst in enumerate(receptores):
+
+            message = msg1 + url_for('responder',id_r=hash_list[i]) + descr + msg2 + dst
+            print(message)
             subj = "Prueba Encuesta" 
 
             msg = Message(
@@ -83,7 +102,7 @@ def enviar_encuesta(id_e):
                 body = message,
                 recipients = [ dst ] )
 
-            m_conn.send( msg )
+            #m_conn.send( msg )
 
     return redirect(url_for('listaE'))
 

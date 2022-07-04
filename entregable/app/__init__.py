@@ -7,6 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app.models.ModelUser import ModelUser
 from app.models.entities.User import User
 import psycopg2
+import hashlib
 #Para los gráficos
 import matplotlib.pyplot as plt
 import base64
@@ -24,22 +25,32 @@ def get_dbconnection():
     return conn
 
 def getPlot(labels, sizes):
+    empty = [i for i in range(len(sizes)) if sizes[i] == 0]
     for i in range(len(sizes)):
         if sizes[i] == 0:
-            sizes[i] = 1
-    print("Debug:")
-    print(labels)
-    print(sizes)
-    fig, ax = plt.subplots()
-    fig.set_size_inches(10, 3)
-    patches, texts, autotexts = ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
-    ax.axis('equal')  
-    plt.tight_layout()
-    #Guardar archivo en buffer
-    buf = BytesIO()
-    fig.savefig(buf, format="png")
-    #Imagen a imprimir en html
-    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    #        empty.append(labels[i])
+    #        del labels[i]
+    #        del sizes[i]
+             sizes[i] = 1
+    labels = [x for i,x in enumerate(labels) if i not in empty]
+    sizes = [x for i,x in enumerate(sizes) if i not in empty]
+    if len(labels) > 0:
+        fig, ax = plt.subplots()
+        fig.set_size_inches(8, 3)
+        fig.subplots_adjust(left=0.2,wspace = 0.2)
+        patches, texts, autotexts = ax.pie(sizes, autopct='%1.1f%%', startangle=90)
+        ax.axis('equal')  
+        plt.tight_layout()
+        plt.legend(labels,bbox_to_anchor=(1,0.5), loc="center right", fontsize=10, 
+           bbox_transform=plt.gcf().transFigure)
+        plt.subplots_adjust(left=0.0, bottom=0.1, right=0.45)
+        #Guardar archivo en buffer
+        buf = BytesIO()
+        fig.savefig(buf, format="png")
+        #Imagen a imprimir en html
+        data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    else:
+        data = None
     return data
 
 def crearUsers():   #Función para insertar usuarios escritos en el archivo "users"
@@ -110,7 +121,7 @@ app.config['MAIL_PASSWORD'] = 'isfiwsphwejadstk'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['SECRET_KEY'] = secrets.token_hex(16)
-
+URL = "localhost:5002"
 csrf = CSRFProtect()
 csrf.init_app(app)
 mail = Mail(app)
