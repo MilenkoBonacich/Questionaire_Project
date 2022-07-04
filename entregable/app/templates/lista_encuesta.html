@@ -51,6 +51,7 @@
                             <input class="img-bt" type="image" value="send" formaction=" {{ url_for('enviar_encuesta',id_e=id_es[i][0]) }} " src="../static/imgs/enviar.png" title="Enviar Encuesta">
                             <input class="img-bt" type="image" value="respuestas" formaction="{{ url_for('respuestas',id_e=id_es[i][0]) }}" src="../static/imgs/respuestas.png" title="Respuestas">
                             <input class="btn btn-primary" type="submit" value="editar datos" formaction="./editarDatosEncuesta/{{id_es[i][0]}}">
+                            <input class="btn btn-primary" type="submit" value="enviar resultados" formaction="./enviarResultadosEncuesta/{{id_es[i][0]}}">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         </form>
                         <input class="img-bt" type="image" value="Eliminar" name="" data-bs-toggle="modal" data-bs-target="#exampleModal{{id_es[i][0]}}" src="../static/imgs/elimina.png" alt="Eliminar" title="Eliminar">

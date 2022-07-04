@@ -239,7 +239,38 @@ def guardarDatos(id_e):
         conn.commit()         
         cur.close()
         conn.close()
-    return redirect(url_for('listaE'))    
+    return redirect(url_for('listaE'))  
+
+@app.route('/enviarResultadosEncuesta/<string:id_e>')    #Url con la lista, tiene la id de encuesta en la url
+def enviarEncuesta(id_e):
+    #id_e := id de encuesta cuyo url se enviará.
+    conn = get_dbconnection()               #Conexión a la base de datos.
+    cur = conn.cursor()
+    cur.execute("select id from email;")    #Query a base de datos de mails
+    rows = cur.fetchall()                   #Obtención de tuplas (con una única columna)
+    receptores = []                         #receptores := Lista de receptores para el email.
+    for r in rows:                          #Transformamos lista de tuplas a lista.
+        receptores.append(r[0])
+    cur.execute("select descripcion from encuesta where id_e=\'" +id_e+ "\'")
+    descrip=cur.fetchone()
+    cur.close()                             #Desconexión a la base de datos.
+    conn.close()
+    msg1 = "Hola, puedes ver los resultados de la encuesta en el siguiente link: localhost:5002/encuesta/" + id_e + "/resultados\n\n"
+    descr=  "La descripcion de la encuesta es: " + descrip[0] + "\n"
+    msg2 = "Si desea dejar de recibir estos correos: localhost:5002/email/desuscripcion/"
+    with mail.connect() as m_conn:
+        for dst in receptores:
+            message = msg1 + descr + msg2 + dst
+            subj = "Prueba Encuesta" 
+            msg = Message(
+                subject = subj,
+                sender = 'alvaro.castillo.rifo@gmail.com',
+                body = message,
+                recipients = [ dst ] )
+            m_conn.send( msg )
+
+
+    return redirect(url_for('listaE')) 
 
 #Código Franco: Lista de Respuestas--------------------------------------------------------------------------
 @app.route('/encuesta/<string:id_e>/respuestas')    #Url con la lista, tiene la id de encuesta en la url
