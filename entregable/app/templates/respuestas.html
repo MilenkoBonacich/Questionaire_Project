@@ -39,13 +39,15 @@
           </nav>
 	</header>
 	<!-- Se itera en las preguntas -->
-	<ul>
+	<ul class="list-group list-group-flush">
 	{% for i in range(preguntas|length) %}
-	        <li>{{ preguntas[i][2] }}<!-- Tercer atributo en la tabla pregunta: título de la pregunta -->
+	        <li class="list-group-item">
+	        	<p class="h5">{{ preguntas[i][2] }}</p>
+	        	<!-- Tercer atributo en la tabla pregunta: título de la pregunta -->
 	        	{% if graficos[i] != None %}
 	        		<br><img class="rounded mx-auto d-block" src='data:image/png;base64,{{ graficos[i] }}'/>
 	        	{% else %}
-	        		<br><mensage>No hay respuestas aún</mensage>
+	        		<p class="h6 text-muted">No hay respuestas aún</p>
 	        	{% endif %}
 	    	</li>
 	{% endfor %}
