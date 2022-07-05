@@ -73,7 +73,13 @@ def email_registrado():
 @app.route('/email/desuscripcion/<string:id_em>')
 def desuscripcion_email(id_em):
 
-    return render_template('desuscripcion_email.html', title='Desuscripcion Email', email=id_em, usuario="susc")
+    return render_template('desuscripcion_email.html', title='Desuscripcion Correo', email=id_em, usuario="susc")
+
+#--------------------- Manejo de Página de Confirmacion Eliminacion Correo - Usuario -------------------------
+@app.route('/email/desuscripcion-exitosa')
+def email_desinscrito():
+
+    return render_template('email_desinscrito.html', title='Desuscripcion Correo')
 
 #--------------------- Manejo de Página para eliminar emails -------------------------
 @app.route("/email/borrar/<string:user>/<string:id_em>")
@@ -83,7 +89,7 @@ def borrar_email(id_em, user):
         url = 'lista_email'
         flash('Correo eliminado exitosamente.')
     else:
-        url = 'pprincipal'
+        url = 'email_desinscrito'
 
 
     conn = get_dbconnection()
@@ -94,9 +100,5 @@ def borrar_email(id_em, user):
 
     cur.close()
     conn.close()
-
-    if user == "susc":
-        return "Su correo ha sido eliminado."
-
 
     return redirect(url_for( url ))

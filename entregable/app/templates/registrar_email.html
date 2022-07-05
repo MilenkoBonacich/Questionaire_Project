@@ -11,42 +11,68 @@
     		<path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z"/>
   			<path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1.5a.5.5 0 0 1-1 0V11a.5.5 0 0 1 1 0Zm0 3a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z"/>
   		</symbol>
+  		<symbol id="envelope" fill="currentColor" viewBox="0 0 16 16">
+    		<path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+  		</symbol>
+  		<symbol id="envelope-plus" fill="currentColor" viewBox="0 0 16 16">
+    		<path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.026A2 2 0 0 0 2 14h6.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586l-1.239-.757ZM16 4.697v4.974A4.491 4.491 0 0 0 12.5 8a4.49 4.49 0 0 0-1.965.45l-.338-.207L16 4.697Z"/>
+  			<path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z"/>
+  		</symbol>
   	</svg>
 
-	<h2 align="middle"> {{ title }} </h2>
+	<!-- ----------------------------------------------------------------------------------------------- -->
 
-	<div class="flashes" style="margin-top: 2vh;" align="middle">
-		{% for cat, msg in get_flashed_messages(with_categories=true) %}
-			<div class="alert alert-{{ cat }} d-inline-flex justify-content-around" role="alert">
-  				<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
-  					<use xlink:href="#envelope-{{ cat }}"/>
-  				</svg>
-  				<div style="padding-left: 10px; padding-right: 10px"> <strong> {{ msg }} </strong> </div>
-  				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-			</div>
-		{% endfor %}
-	</div>
+	<div class="card border-dark">
+		<div class="card-header text-center"> <h1> {{ title }} </h1> </div>
 
-	{% from "_macro.html" import render_field %}
-	<form>
-		<div class="container">
-			<div class="row">
-				<div class="col-4 offset-4" style="margin-top: 1vh;">
-					<div class="mb-10">
-                        {{ render_field(eTF.email) }}
-                        <button type="submit" formaction="{{ url_for('email_registrado') }}" >Registrar</button>
-                    </div>
+		<div class="flashes" style="margin-top: 2vh;" align="middle">
+			{% for cat, msg in get_flashed_messages(with_categories=true) %}
+				<div class="alert alert-{{ cat }} d-inline-flex justify-content-around" role="alert">
+  					<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
+  						<use xlink:href="#envelope-{{ cat }}"/>
+  					</svg>
+  					<div style="padding-left: 10px; padding-right: 10px"> <b> {{ msg }} </b> </div>
+  					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>
+			{% endfor %}
+		</div>
+
+		<div class="container" align="middle"> 
+			<div class="row g-0">
+				
+				<div class="col" style="margin-left: 20vh"> 
+					<img class="img-fluid rounded-start" src="../../static/imgs/newUser2.png" alt="registerMail" 
+					style="height: 30vh; width: 30vh;">
+				</div>
+
+				<div class="col" style="margin-right: 30vh;">
+					<div class="card-body" align="middle" style="margin-bottom: 3vh;">
+						<p class="card-text" style="font-size: 25px;"> <b>Ingrese correo a registrar</b> </p>
+
+						<form>
+							<div class="container d-flex justify-content-center">
+								<svg class="bi flex-shrink-0 me-2" width="32" height="32" role="img">
+  									<use xlink:href="#envelope"/>
+  								</svg>
+  							<div style="padding-left: 7.5px; padding-right: 7.5px"> </div>
+  								{{ eTF.email(*args)|safe }}
+							</div>
+			
+							<br>
+
+							<button class="btn btn-primary btn-lg" type="submit" style="font-size: 22px;" 
+							formaction="{{ url_for('email_registrado') }}">
+								<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img">
+  									<use xlink:href="#envelope-plus"/>
+  								</svg>
+								<b>Registrar</b>
+							</button>
+						</form>
+					</div>
+				</div>
+
 			</div>
 		</div>
-	</form>
-
-	<br>
-
-	<!--
-	<form>
-		<button type="submit" formaction="{{ url_for('lista_email') }}" >Registered Emails</button>
-	</form>
-	-->
+	</div>
 
 {% endblock %}
