@@ -42,8 +42,7 @@ def crearE():
                         datos.append(value)
             conn = get_dbconnection()
             cur = conn.cursor()
-            url = "localhost:5000/encuesta/"+datos[1] +"/responder"
-            cur.execute("INSERT INTO encuesta (id_e,titulo,url,f_ini,f_exp,descripcion) VALUES (%s,%s,%s,%s,%s,%s)",(datos[1],datos[0],url,datos[3],datos[4],datos[2]))
+            cur.execute("INSERT INTO encuesta (id_e,titulo,f_ini,f_exp,descripcion) VALUES (%s,%s,%s,%s,%s)",(datos[1],datos[0],datos[3],datos[4],datos[2]))
             conn.commit() 
             for i in range(len(lp)):
                 id_p = datos[1]+'_p'+str(i)
@@ -93,7 +92,7 @@ def enviar_encuesta(id_e):
     cur.close()                             #Desconexión a la base de datos.
     conn.close()
 
-    msg1 = "Hola, puedes responder tu encuesta en el siguiente: " + URL
+    msg1 = "Hola, puedes responder tu encuesta en el siguiente link: " + URL
     descr=  "\n\nLa descripcion de la encuesta es: " + descrip[0] + "\n"
     msg2 = "Si desea dejar de recibir estos correos: " + URL + "/email/desuscripcion/"
 
@@ -102,7 +101,7 @@ def enviar_encuesta(id_e):
         for i, dst in enumerate(receptores):
 
             message = msg1 + url_for('responder',id_r=hash_list[i]) + descr + msg2 + dst
-            print(message)
+
             subj = "Prueba Encuesta" 
 
             msg = Message(
@@ -111,8 +110,8 @@ def enviar_encuesta(id_e):
                 body = message,
                 recipients = [ dst ] )
 
-            #m_conn.send( msg )
-
+            m_conn.send( msg )
+    flash('enviado')
     return redirect(url_for('listaE'))
 
 #-------------------------- Manejo de Página de lista de encuestas ----------------------------
@@ -297,9 +296,9 @@ def enviarEncuesta(id_e):
     descrip=cur.fetchone()
     cur.close()                             #Desconexión a la base de datos.
     conn.close()
-    msg1 = "Hola, puedes ver los resultados de la encuesta en el siguiente link: localhost:5002/encuesta/" + id_e + "/resultados\n\n"
+    msg1 = "Hola, puedes ver los resultados de la encuesta en el siguiente link:" + URL + "/encuesta/" + id_e + "/resultados\n\n"
     descr=  "La descripcion de la encuesta es: " + descrip[0] + "\n"
-    msg2 = "Si desea dejar de recibir estos correos: localhost:5002/email/desuscripcion/"
+    msg2 = "Si desea dejar de recibir estos correos: " + URL + "/email/desuscripcion/"
     with mail.connect() as m_conn:
         for dst in receptores:
             message = msg1 + descr + msg2 + dst
