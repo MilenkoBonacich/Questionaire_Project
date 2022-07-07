@@ -32,11 +32,12 @@
                 textbox.type = "text"
                 textbox.size = "150"
                 textbox.maxlength = "150"
-                textbox.class = "pregunta"
+                textbox.classname = "pregunta"
                 textbox.name = "p"+count
 
                 const erase = document.createElement("button")
                 erase.type = "button"
+                erase.className = "btn btn-secondary"
                 erase.appendChild(document.createTextNode("Borrar pregunta"))
                 erase.onclick= function(){
                     question.remove()
@@ -46,9 +47,10 @@
                 const list = document.createElement("ol")
                 makeAlternative(list)
                 makeAlternative(list)
-
+                list.className = "pb-4"
                 const calt = document.createElement("button")
                 calt.type = "button"
+                calt.className = "btn btn-secondary"
                 calt.appendChild(document.createTextNode("Crear Alternativa"))
                 calt.onclick= function(){
                     if(list.childElementCount<10){
@@ -66,17 +68,21 @@
 
                 const balt = document.createElement("button")
                 balt.type = "button"
+                balt.className="btn btn-secondary"
                 balt.appendChild(document.createTextNode("Borrar Alternativa"))
                 balt.onclick= function(){
                     if(list.childElementCount>2){
                         list.lastChild.remove()
                     }
                 }
+                var botones = document.createElement("p")
+                botones.className = "pt-2 text-end"
+                botones.appendChild(erase)
+                botones.appendChild(calt)
+                botones.appendChild(balt)
 
                 question.appendChild(textbox)
-                question.appendChild(erase)
-                question.appendChild(calt)
-                question.appendChild(balt)
+                question.appendChild(botones)
                 question.appendChild(list)
                 document.getElementById("preguntas").appendChild(question)
             }
@@ -172,8 +178,9 @@
     </header>
     <body>
         <!-- <form method="post"><input type="submit" name="menu" value="Volver a Menu"/></form> -->
+    <form method="post" onSubmit="return checkSubmition()">
+      <div class="p-5 container border">
         <h2>Crear Encuesta:</h2>
-        <form method="post" onSubmit="return checkSubmition()"> <!--Por alguna razon VS Code me dice que el return no va ahi, pero el codigo funciona como debe-->
             <p>Titulo de encuesta:
                 <input type="text" name="title" size="30" maxlength="100">
             </p>
@@ -186,14 +193,17 @@
             <p id="ifecha">Fecha Inicio:
                 <input onchange="getIniDate()" type="date" id="ini" name="ini">
             </p>
-            <input onclick="makeQuestion()" type="button" name="cpreguntas" value="Crear Pregunta"/>
+            <input class="btn btn-secondary" onclick="makeQuestion()" type="button" name="cpreguntas" value="Crear Pregunta"/>
+      </div>
+      <div class="p-5 container border">
             <h3>Preguntas:</h3>
                 <ol id="preguntas">
 
                 </ol>
-            <input type="submit" name="crear" value="Crear Encuesta"/>
+            <input class="btn btn-primary" type="submit" name="crear" value="Crear Encuesta"/>
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        </form>
+      </div>
+    </form>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     </body>
 </html>
