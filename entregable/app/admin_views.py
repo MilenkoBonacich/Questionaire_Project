@@ -1,4 +1,4 @@
-from app import app, login_required, render_template, request,  redirect, url_for
+from app import app, login_required, render_template, request,  redirect, url_for, flash
 from app import Message, mail, hashlib
 from app import get_dbconnection, insertDescripcion, getPlot, eliminarEncuesta
 from app import URL
@@ -258,6 +258,7 @@ def guardarDatos(id_e):
         conn.commit()         
         cur.close()
         conn.close()
+        flash('correcto')
     return redirect(url_for('listaE'))  
 
 @app.route('/enviarResultadosEncuesta/<string:id_e>')    #Url con la lista, tiene la id de encuesta en la url
@@ -288,7 +289,7 @@ def enviarEncuesta(id_e):
                 recipients = [ dst ] )
             m_conn.send( msg )
 
-
+            flash('correcto')
     return redirect(url_for('listaE')) 
 
 #Código Franco: Lista de Respuestas--------------------------------------------------------------------------

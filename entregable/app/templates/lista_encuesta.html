@@ -28,7 +28,14 @@
 
     <main>
         <div class="container">
-            
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>Función ejecutada correctamente</strong> 
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+            {% endwith %}
             {% for i in range(titulos|length) %}
             <div class="row card m-5">
                 <h3><label class="card-title">{{ titulos[i][0] }}</label></h3>
