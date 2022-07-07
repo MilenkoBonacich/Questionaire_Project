@@ -19,6 +19,15 @@
 
     </header>
 
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>Función ejecutada correctamente</strong> 
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% endwith %}
+
     <main class="row align-items-center justify-items-center justify-content-center" style="height: 75vh;">
         
         <div class="card text-center" style="width: 28rem; height: 18rem;">
@@ -41,7 +50,7 @@
                                     <form style="margin-top: 2vh;">
                                     {{ render_field(eTF.email) }}
                                     <br>
-                                    <button class="btn btn-success" type="submit" formaction="{{ url_for('principal') }}" style="margin-top: 4vh; " >Register</button>
+                                    <button class="btn btn-success" type="submit" formaction="{{ url_for('email_registrado2') }}" style="margin-top: 4vh; " >Register</button>
                                     </form>
                                 </div>
                             </div>

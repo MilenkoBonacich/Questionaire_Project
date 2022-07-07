@@ -52,6 +52,14 @@
                 </ul>
             </div>
 
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>Función ejecutada correctamente</strong> 
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+            {% endwith %}
             {% for i in range(titulos|length) %}
             <div class="row card m-5">
                 <h3><label class="card-title">{{ titulos[i][0] }}</label></h3>
@@ -74,7 +82,7 @@
                             <input class="img-bt" type="image" value="send" formaction=" {{ url_for('enviar_encuesta',id_e=id_es[i][0]) }} " src="../static/imgs/enviar.png" title="Enviar Encuesta">
                             <input class="img-bt" type="image" value="enviar resultados" formaction="./enviarResultadosEncuesta/{{id_es[i][0]}}" title="Enviar Resultados" src="../static/imgs/premium.png">
                             <input class="img-bt" type="image" value="respuestas" formaction="{{ url_for('respuestas',id_e=id_es[i][0]) }}" src="../static/imgs/respuestas.png" title="Respuestas">
-                            <input class="img-bt" type="image" value="editar datos" formaction="./editarDatosEncuesta/{{id_es[i][0]}}" src="../static/imgs/editar.png" title="Editar Encuesta">
+                            <input class="img-bt" type="image" value="editar datos" formaction="/editarDatosEncuesta/{{id_es[i][0]}}" src="../static/imgs/editar.png" title="Editar Encuesta">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         </form>
                         <input class="img-bt" type="image" value="Eliminar" name="" data-bs-toggle="modal" data-bs-target="#exampleModal{{id_es[i][0]}}" src="../static/imgs/elimina.png" alt="Eliminar" title="Eliminar">

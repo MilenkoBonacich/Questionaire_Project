@@ -42,6 +42,29 @@ def lista_email():
     length = len(emails)
     return render_template('lista_email.html', title='Email DataBase', emails=emails, index=length )
 
+
+#--------------------- Manejo de Página para finalizar registro de emails -------------------------
+@app.route('/email/registro-exitoso')
+
+def email_registrado2():
+
+    email = request.args.get('email', 'no email')
+
+    conn = get_dbconnection()
+    cur = conn.cursor()
+    
+    sqlquery = """ INSERT INTO email (id) VALUES ('%s') """ %(email)
+    cur.execute( sqlquery )
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+    flash("Email registrado exitosamente.")
+    return redirect( url_for('principal') )
+    #return render_template('email_registrado.html', title='Registration Successful', email=email)
+
+
 #--------------------- Manejo de Página para finalizar registro de emails -------------------------
 @app.route('/email/registro-exitoso')
 @login_required

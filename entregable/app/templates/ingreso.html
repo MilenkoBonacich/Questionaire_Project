@@ -18,6 +18,14 @@
         </nav>
 
     </header>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>Email Registado Exitosamente</strong> 
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% endwith %}
 
     <main class="row align-items-center justify-items-center justify-content-center" style="height: 75vh;">
         
