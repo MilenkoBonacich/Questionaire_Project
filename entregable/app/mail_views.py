@@ -127,7 +127,8 @@ def borrar_email(id_em, user):
 
     conn = get_dbconnection()
     cur = conn.cursor()
-    
+    #Borrando en "cascada inversa"
+    cur.execute( "DELETE FROM respondido WHERE email = %s", (id_em,) )
     cur.execute( "DELETE FROM email WHERE id = %s", (id_em,) )
     conn.commit()
 
