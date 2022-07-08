@@ -100,12 +100,13 @@ def insertDescripcion(id,descripcion):
     conn.close()    
 #-------------------------Funcion Eliminar Encuesta-------------------------------#                    
 def eliminarEncuesta(id):
-    print("insertDescripcion!!")
     # descripcion='Veamos si funca'
     # id='encuesta_2'
     conn = get_dbconnection() 
     cur = conn.cursor()
     # update encuesta set descripcion='descripcion de prueba' WHERE id_e='id5';
+    #Borrando en "cascada inversa"
+    cur.execute( "DELETE FROM respondido WHERE id_e = %s", (id,) )
     sqlquery = "DELETE FROM encuesta WHERE id_e=\'" + id + "\';"
     cur.execute(sqlquery)
     conn.commit()
