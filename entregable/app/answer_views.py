@@ -1,4 +1,4 @@
-from app import app, get_dbconnection, render_template, request, getPlot
+from app import app, get_dbconnection, render_template, request, getPlot, flash
 
 #Código franco: Formulario para enviar respuesta------------------------------------------------------------------
 @app.route('/responder')    #Url con la lista, tiene la id de encuesta en la url
@@ -11,10 +11,11 @@ def responder():
     cur.execute(sqlquery, (emailhash,))
     row = cur.fetchone()
     if row is None:             #Caso 1: Encuesta no existe.
-        return "<h1>Encuesta no encontrada :(</h1>"
+        return render_template('postrespuesta.html')   
     else:                       #Caso 2: Encuesta ya fue respondida.
         if row[1] == True:
-            return "<h1>Ya respondiste esta encuesta, gracias por tu respuesta!</h1>"
+            flash('encuesta ya respondida','respondido')
+            return render_template('postrespuesta.html')
                                 #Caso 3: Encuesta puede responderse.
     id_e = row[0]
     #Seleccionar titulo de la encuesta
@@ -55,7 +56,8 @@ def enviar():
     cur.execute(sqlquery, (emailhash,))
     row = cur.fetchone()
     if row[2] == True:  #Caso: Reenvío de formulario?(No estoy seguro si esto puede suceder, pero solo por asegurarse)
-            return "<h1>Ya respondiste esta encuesta, gracias por tu respuesta!</h1>"
+            flash('encuesta ya respondida','respondido')
+            return render_template('postrespuesta.html')
     email = row[0]
     id_e = row[1]
     sqlquery = """ UPDATE respondido
@@ -76,7 +78,8 @@ def enviar():
     conn.commit()
     cur.close()
     conn.close()
-    return "<h1>Greacias! :D</h1><h2>Agradecemos su participación</h2>"
+    flash('encuesta ya respondida','respondido')
+    return render_template('postrespuesta.html')
 
 @app.route('/encuesta/<string:id_e>/resultados')    #Url con la lista, tiene la id de encuesta en la url
 def resultados(id_e):
