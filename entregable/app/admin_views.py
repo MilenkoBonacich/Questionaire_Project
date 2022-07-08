@@ -180,7 +180,7 @@ def previsualizar(id_e):
     cur.close()                     #Se cierra el cursor
     cur = conn.cursor()             #Se reabre el cursor
 
-    sqlquery = "select * from pregunta where pregunta.id_e = \'" + id_e + "\';" #Arreglo de preguntas
+    sqlquery = "select * from pregunta where pregunta.id_e = \'" + id_e + "\' order by id_p ASC;" #Arreglo de preguntas
     cur.execute(sqlquery)
     preguntas = cur.fetchall()
     cur.close()
@@ -204,7 +204,7 @@ def editar_preguntas(id_e, id_p):
     conn = get_dbconnection()                       #Conexión a la base de datos
     #Seleccionar titulo de la encuesta
     cur = conn.cursor()
-    sqlquery = "select * from pregunta where pregunta.id_p = \'" + id_p + "\';"
+    sqlquery = "select * from pregunta where pregunta.id_p = \'" + id_p + "\'order by id_p ASC;"
     cur.execute(sqlquery)
     pregunta = cur.fetchone()
     cur.close()
@@ -330,7 +330,7 @@ def respuestas(id_e):
     cur.close()                     #Se cierra el cursor
     #Seleccionar preguntas de la encuesta
     cur = conn.cursor()             #Se reabre el cursor
-    sqlquery = "select * from pregunta where pregunta.id_e = \'" + id_e + "\';" #Arreglo de preguntas
+    sqlquery = "select * from pregunta where pregunta.id_e = \'" + id_e + "\'order by id_p ASC;" #Arreglo de preguntas
     cur.execute(sqlquery)
     preguntas = cur.fetchall()
     cur.close()

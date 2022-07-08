@@ -30,7 +30,7 @@ def responder():
     cur.close()                     #Se cierra el cursor
     #Seleccionar preguntas de la encuesta
     cur = conn.cursor()             #Se reabre el cursor
-    sqlquery = "select * from pregunta where pregunta.id_e = \'" + id_e + "\';" #Arreglo de preguntas
+    sqlquery = "select * from pregunta where pregunta.id_e = \'" + id_e + "\'order by id_p ASC;" #Arreglo de preguntas
     cur.execute(sqlquery)
     preguntas = cur.fetchall()
     cur.close()
