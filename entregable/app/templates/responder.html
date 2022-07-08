@@ -33,7 +33,7 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 <p class="h5">{{ pregunta[2] }}</p>
-                <select class="form-select" multiple aria-label="multiple select example">
+                <select class="form-select" multiple aria-label="multiple select example" name="{{ pregunta[0] }}">
             	{% for alternativa in alternativas %}
             		{% if alternativa[1] == pregunta[0] %}
                         <option class="mx-3"name="op_{{ pregunta[0] }}" value="{{ alternativa[0] }}">{{ alternativa[2] }}</option>

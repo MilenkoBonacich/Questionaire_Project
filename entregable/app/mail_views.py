@@ -44,7 +44,7 @@ def lista_email():
 
 
 #--------------------- Manejo de Página para finalizar registro de emails -------------------------
-@app.route('/email/registro-exitoso')
+@app.route('/email/registro-publico-exitoso')
 
 def email_registrado2():
 
@@ -100,6 +100,8 @@ def email_registrado():
 
 
     flash( message, category )
+    print('DEBUF')
+    print(url_for('registrar_email'))
     return redirect( url_for('registrar_email') )
 
 #--------------------- Manejo de Página de Confirmacion Eliminacion Correo - Usuario -------------------------

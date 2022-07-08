@@ -65,11 +65,12 @@ def enviar():
                     WHERE email = %s AND id_e = %s """
     cur.execute(sqlquery,('1',email,id_e))
 
-    opciones = list(request.form.keys())
-    opciones.remove("enviar_respuesta")
+    sqlquery = "select * from pregunta where pregunta.id_e = \'" + id_e + "\'order by id_p ASC;"
+    cur.execute(sqlquery)
+    preguntas = cur.fetchall()
     resp = []
-    for op in opciones:
-        resp.append(request.form[op])
+    for p in preguntas:
+        resp.append(request.form.get(p[0]))
     for r in resp:
         query = """ UPDATE alternativa
                     SET cont_r = cont_r+1
