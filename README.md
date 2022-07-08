@@ -24,7 +24,7 @@ IMPORTANTE: no usar flask run o porcentaje del código (`if __name__ == "__main_
 	- `listaRespuestas/`: Prototipo de visualización de conteo de respuestas
 	- `responder/`: Prototipo de interfaz de encuestado
 	- `t1_milenko/`: Prototipo de creación de encuestas
-	- `palMile/`: Prototipo de ejemplo para creación de
+	- `palMile/`: Prototipo de ejemplo para creación de encuestas
 - `entregable/`: Producto entregable del sprint 3
 	- `app`: Directorio con archivos principales del proyecto
 		- `__init__.py`: Archivo con todos los imports del proyecto, funciones y variables globales
