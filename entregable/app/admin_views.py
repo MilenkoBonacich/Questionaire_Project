@@ -260,7 +260,6 @@ def editar(id_e):
         datosEncuesta.append( r[2] )
         datosEncuesta.append( r[3] )
         datosEncuesta.append( r[4] )
-        datosEncuesta.append( r[5] )
     return render_template('editar_datos_encuesta.html',datosEncuesta=datosEncuesta)
 
 @app.route('/guardarDatosEncuesta/<string:id_e>',methods=['POST'])
