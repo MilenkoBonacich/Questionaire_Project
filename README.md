@@ -12,8 +12,8 @@ La interacción de los encuestados con la página comenzará desde el correo ele
 
 ---
 ## Ejemplo Ejecución:
-> El proyecto es ejecutable desde `/entregable/run.py` usando el comando `python run.py`, al ingresar, se puede entrar a la vista de administrador con la cuenta alvaro@encuestas.cl y contraseña pass123
-> IMPORTANTE: no usar flask run o porcentaje del código (`if __name__ == "__main__"`) no se ejecutará, por lo que tendrá un comportamiento inesperado
+El proyecto es ejecutable desde `/entregable/run.py` usando el comando `python run.py`, al ingresar, se puede entrar a la vista de administrador con la cuenta alvaro@encuestas.cl y contraseña pass123
+IMPORTANTE: no usar flask run o porcentaje del código (`if __name__ == "__main__"`) no se ejecutará, por lo que tendrá un comportamiento inesperado
 
 ---
 ## Detalles del proyecto:
@@ -31,8 +31,8 @@ La interacción de los encuestados con la página comenzará desde el correo ele
 		- `templates/`: Archivos .html
 		- `static/`: Archivos .css e imágenes
 
-> El proyecto está implementado en python haciendo uso del framework flask y para la estilización del proyecto se hizo uso de la biblioteca bootstrap.
-> El proyecto hace uso de una base de datos sql en la nube de la plataforma heroku, si se quiere usar otra base de datos se tiene que cambiar los datos de la función `get_dbconnection()` ubicada en el archivo `app/__init__.py` y tiene que tener la siguiente estructura:
+El proyecto está implementado en python haciendo uso del framework flask y para la estilización del proyecto se hizo uso de la biblioteca bootstrap.
+El proyecto hace uso de una base de datos sql en la nube de la plataforma heroku, si se quiere usar otra base de datos se tiene que cambiar los datos de la función `get_dbconnection()` ubicada en el archivo `app/__init__.py` y tiene que tener la siguiente estructura:
 
 ### Estructura de la Base de datos
 - `encuesta`:
