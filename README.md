@@ -14,6 +14,8 @@ La interacción de los encuestados con la página comenzará desde el correo ele
 ## Ejemplo Ejecución:
 El proyecto es ejecutable desde `/entregable/run.py` usando el comando `python run.py`, al ingresar, se puede entrar a la vista de administrador con la cuenta alvaro@encuestas.cl y contraseña pass123
 
+Si se quiere agregar otro usuario se puede hacer modificando el archivo `entregable/app/users` usando el formato \[EMAIL\](espacio)\[CONTRASEÑA\](espacio)\[APODO\](salto de línea)
+
 IMPORTANTE: no usar flask run o porcentaje del código (`if __name__ == "__main__"`) no se ejecutará, por lo que tendrá un comportamiento inesperado
 
 ---
