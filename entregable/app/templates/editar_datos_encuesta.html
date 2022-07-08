@@ -24,7 +24,6 @@
 		<h1><a>Estas editando los datos de la encuesta</a></h1>
 		 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 		<li>Id encuesta: {{ datosEncuesta[0]}}</li>
-		<li>Url:        {{ datosEncuesta[2]}}</li>
 		<p> Titulo encuesta: 
 			<input type="text" size="40" maxlength="60" value="{{datosEncuesta[1]}}" name="newtitulo">
 		</p>
