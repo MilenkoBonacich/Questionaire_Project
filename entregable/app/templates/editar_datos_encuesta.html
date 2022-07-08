@@ -28,13 +28,13 @@
 			<input type="text" size="40" maxlength="60" value="{{datosEncuesta[1]}}" name="newtitulo">
 		</p>
 		<p> Fecha inicio:    
-			<input onchange="checkDate()" type="date" size="40" maxlength="60" value="{{datosEncuesta[3]}}" name="newIn" id="newIn">
+			<input onchange="checkDate()" type="date" size="40" maxlength="60" value="{{datosEncuesta[2]}}" name="newIn" id="newIn">
 		</p>
 		<p> Fecha final:     
-			<input onchange="checkDate()" type="date" size="40" maxlength="60" min="{{datosEncuesta[3]}}"value="{{ datosEncuesta[4]}}" name="newFin" id="newFin">
+			<input onchange="checkDate()" type="date" size="40" maxlength="60" min="{{datosEncuesta[2]}}"value="{{ datosEncuesta[3]}}" name="newFin" id="newFin">
 		</p>
 		<p> Descripcion:     
-			<input type="text"value="{{datosEncuesta[5]}}"name="newDescripcion" size="30" maxlength="256">
+			<input type="text"value="{{datosEncuesta[4]}}"name="newDescripcion" size="60" maxlength="256">
 		</p>
 		<!-- Button trigger modal -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" >
